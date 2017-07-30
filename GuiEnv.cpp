@@ -15,6 +15,15 @@ void Gui::render(float dt) {
 		elements[i]->render(app);
 }
 
+void Gui::events(Event &e) {
+	if (e.type == Event::MouseMoved) {
+		Vector2i mouse = Mouse::getPosition(*app);
+
+		for (unsigned i = 0; i < elements.size(); i++)
+			elements[i]->update(0, mouse);
+	}
+}
+
 shared_ptr<Gui::GuiElement> Gui::createElement(string name, IsoEngine::Coord<float> pos) {
 	Sprite sn = sprHandler->create(name);
 	Sprite sh = sprHandler->create(name + "_hov");
@@ -41,7 +50,7 @@ void Gui::GuiButton::render(shared_ptr<RenderWindow> app) {
 		app->draw(spr);
 }
 
-void Gui::GuiButton::update(float dt, sf::Vector2u mouse) {
+void Gui::GuiButton::update(float dt, sf::Vector2i mouse) {
 	if (spr.getGlobalBounds().contains((float)mouse.x, (float)mouse.y))
 		hover = true;
 	else

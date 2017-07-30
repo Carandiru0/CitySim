@@ -16,7 +16,7 @@ class Gui {
 		class GuiElement {
 			public:
 				virtual void render(std::shared_ptr<sf::RenderWindow> app) = 0;
-				virtual void update(float dt, sf::Vector2u mouse) = 0;
+				virtual void update(float dt, sf::Vector2i mouse) = 0;
 
 			protected:
 				IsoEngine::Coord<float> position;
@@ -30,7 +30,7 @@ class Gui {
 				GuiButton(IsoEngine::Coord<float> coord, sf::Sprite &sn, sf::Sprite &sh);
 
 				void render(std::shared_ptr<sf::RenderWindow> app);
-				void update(float dt, sf::Vector2u mouse);
+				void update(float dt, sf::Vector2i mouse);
 
 			private:
 				bool hover;
@@ -41,6 +41,7 @@ class Gui {
 		Gui(std::shared_ptr<SpriteHandler> sprHandler, std::shared_ptr<sf::RenderWindow> app);
 
 		void render(float dt);
+		void events(sf::Event &e);
 
 	private:
 		std::shared_ptr<sf::RenderWindow> app;

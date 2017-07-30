@@ -23,6 +23,8 @@ int main() {
 				app->close();
 			else if (e.type == Event::KeyReleased && e.key.code == Keyboard::Escape)
 				app->close();
+
+			gui->events(e);
 		}
 
 		app->clear(Color(119, 181, 254));
