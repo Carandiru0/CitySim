@@ -49,6 +49,7 @@ class IsoEngine {
 		};
 
 		void render();
+		void setTile(Coord<int> position, std::string tile, unsigned layer = 0);
 
 	private:
 		std::shared_ptr<IsoMap> map_grnd, map_build;

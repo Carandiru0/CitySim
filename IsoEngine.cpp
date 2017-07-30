@@ -11,28 +11,17 @@ IsoEngine::IsoEngine(shared_ptr<SpriteHandler> _spr, std::shared_ptr<RenderWindo
 	tiles["pavement"] = { sprHandler->create("pavement") };
 	tiles["building1"] = { sprHandler->create("building1") };
 
-	map_grnd	= make_shared<IsoMap>(9, 9);
-	map_build	= make_shared<IsoMap>(9, 9);
+	map_grnd	= make_shared<IsoMap>(13, 13);
+	map_build	= make_shared<IsoMap>(13, 13);
 
 	offset = origin(map_grnd);
 
-	for (int y = 0; y < map_grnd->getH(); y++) {
-		for (int x = 0; x < map_grnd->getW(); x++) {
-			IsoMap::Tile t_grass;
-			t_grass.iso = xy_iso(Coord<float>((float)x, (float)y));
-			t_grass.screen = Coord<int>(x, y);
-			t_grass.tile = "pavement";
+	for (int y = 0; y < map_grnd->getH(); y++)
+		for (int x = 0; x < map_grnd->getW(); x++)
+			setTile(Coord<int>(x, y), "grass");
 
-			map_grnd->data[y][x] = make_shared<IsoMap::Tile>(t_grass);
-		}
-	}
-
-	IsoMap::Tile t_building;
-	t_building.iso = xy_iso(Coord<float>(4, 4));
-	t_building.screen = Coord<int>(4, 4);
-	t_building.tile = "building1";
-
-	map_build->data[4][4] = make_shared<IsoMap::Tile>(t_building);
+	setTile(Coord<int>(4, 4), "pavement");
+	setTile(Coord<int>(4, 4), "building1", 1);
 }
 
 void IsoEngine::render() {
@@ -50,6 +39,18 @@ void IsoEngine::render() {
 			}
 			
 		}
+	}
+}
+
+void IsoEngine::setTile(Coord<int> position, string tile, unsigned layer) {
+	IsoMap::Tile t;
+	t.iso = xy_iso(Coord<float>((float)position.x, (float)position.y));
+	t.screen = Coord<int>(position.x, position.y);
+	t.tile = tile;
+
+	switch (layer) {
+		case 0: map_grnd->data[position.y][position.x] = make_shared<IsoMap::Tile>(t); break;
+		case 1: map_build->data[position.y][position.x] = make_shared<IsoMap::Tile>(t); break;
 	}
 }
 

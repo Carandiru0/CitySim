@@ -5,8 +5,8 @@ using namespace std;
 
 SpriteHandler::SpriteHandler() : main_sheet(64, 32, 0, "data/tex/sheet1.png") {
 	sprites["grass"]		= main_sheet.get(0, 0);
-	sprites["pavement"]		= main_sheet.get(1, 0);
-	sprites["building1"]	= main_sheet.get(2, 0, 2);
+	sprites["pavement"]		= main_sheet.get(0, 1);
+	sprites["building1"]	= main_sheet.get(0, 2, 2);
 }
 
 Sprite &SpriteHandler::create(string tex) {
