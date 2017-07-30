@@ -26,6 +26,6 @@ class SpriteHandler {
 		sf::Sprite &create(std::string tex);
 
 	private:
-		SpriteSheet main_sheet;
+		SpriteSheet main_sheet, gui_sheet;
 		std::map<std::string, sf::Sprite> sprites;
 };

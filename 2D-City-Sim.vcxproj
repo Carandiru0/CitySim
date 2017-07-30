@@ -154,11 +154,13 @@
   <ItemGroup>
     <ClCompile Include="AnimatedSprite.cpp" />
     <ClCompile Include="CitySim.cpp" />
+    <ClCompile Include="GuiEnv.cpp" />
     <ClCompile Include="IsoEngine.cpp" />
     <ClCompile Include="SpriteHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AnimatedSprite.h" />
+    <ClInclude Include="AnimatedSprite.hpp" />
+    <ClInclude Include="GuiEnv.hpp" />
     <ClInclude Include="IsoEngine.hpp" />
     <ClInclude Include="SpriteHandler.hpp" />
   </ItemGroup>

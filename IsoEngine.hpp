@@ -13,12 +13,13 @@ class IsoEngine {
 	public:
 		IsoEngine(std::shared_ptr<SpriteHandler> sprHandler, std::shared_ptr<sf::RenderWindow> app);
 
-		template <typename T>
+		template <class T>
 		struct Coord {
 			T x, y;
 
 			Coord() { x = T(0); y = T(0); }
 			Coord(T _x, T _y) { x = _x, y = _y; }
+			Coord(const Coord<T> &copy) { x = copy.x; y = copy.y; }
 
 			void operator+=(Coord<T> n) { x += n.x; y += n.y; }
 			Coord<T> operator+(Coord<T> n) { return Coord<T>(x + n.x, y + n.y); }

@@ -3,10 +3,16 @@
 using namespace sf;
 using namespace std;
 
-SpriteHandler::SpriteHandler() : main_sheet(64, 32, 0, "data/tex/sheet1.png") {
+SpriteHandler::SpriteHandler()
+	: main_sheet(64, 32, 0, "data/tex/sheet1.png"),
+	  gui_sheet(64, 64, 0, "data/tex/gui.png") {
+
 	sprites["grass"]		= main_sheet.get(0, 0);
 	sprites["pavement"]		= main_sheet.get(0, 1);
 	sprites["building1"]	= main_sheet.get(0, 2, 2);
+
+	sprites["btn_zone"]		= gui_sheet.get(0, 0);
+	sprites["btn_zone_hov"] = gui_sheet.get(0, 1);
 }
 
 Sprite &SpriteHandler::create(string tex) {

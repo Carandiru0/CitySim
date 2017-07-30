@@ -7,9 +7,9 @@ IsoEngine::IsoEngine(shared_ptr<SpriteHandler> _spr, std::shared_ptr<RenderWindo
 	app = _app;
 	sprHandler = _spr;
 
-	tiles["grass"] = { sprHandler->create("grass") };
-	tiles["pavement"] = { sprHandler->create("pavement") };
-	tiles["building1"] = { sprHandler->create("building1") };
+	tiles["grass"]		= { sprHandler->create("grass") };
+	tiles["pavement"]	= { sprHandler->create("pavement") };
+	tiles["building1"]	= { sprHandler->create("building1") };
 
 	map_grnd	= make_shared<IsoMap>(13, 13);
 	map_build	= make_shared<IsoMap>(13, 13);
