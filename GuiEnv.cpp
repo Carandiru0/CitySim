@@ -1,5 +1,7 @@
 #include "GuiEnv.hpp"
 
+#include <iostream>
+
 using namespace sf;
 using namespace std;
 
@@ -7,7 +9,7 @@ Gui::Gui(shared_ptr<SpriteHandler> spr, shared_ptr<RenderWindow> _app) {
 	app = _app;
 	sprHandler = spr;
 
-	elements.push_back(createElement("btn_zone", IsoEngine::Coord<float>(42, 620)));
+	elements.push_back(createElement("btn_zone", IsoEngine::Coord<float>(42, 620), &Gui::action_btn_zone));
 }
 
 void Gui::render(float dt) {
@@ -21,17 +23,29 @@ void Gui::events(Event &e) {
 
 		for (unsigned i = 0; i < elements.size(); i++)
 			elements[i]->update(0, mouse);
+	} if (e.type == Event::MouseButtonReleased) {
+		if (e.mouseButton.button == Mouse::Left) {
+			for (unsigned i = 0; i < elements.size(); i++) {
+				if (elements[i]->hover && elements[i]->action != nullptr)
+					(this->*elements[i]->action)();
+			}
+		}
 	}
 }
 
-shared_ptr<Gui::GuiElement> Gui::createElement(string name, IsoEngine::Coord<float> pos) {
+shared_ptr<Gui::GuiElement> Gui::createElement(string name, IsoEngine::Coord<float> pos, Action action) {
 	Sprite sn = sprHandler->create(name);
 	Sprite sh = sprHandler->create(name + "_hov");
 	
-	return std::shared_ptr<GuiElement>(new GuiButton(pos, sn, sh));
+	return std::shared_ptr<GuiElement>(new GuiButton(action, pos, sn, sh));
 }
 
-Gui::GuiButton::GuiButton(IsoEngine::Coord<float> pos, sf::Sprite &sn, sf::Sprite &sh) : GuiElement(pos), hover(false) {
+void Gui::action_btn_zone() {
+	cout << "Action called\n";
+}
+
+Gui::GuiButton::GuiButton(Action _action, IsoEngine::Coord<float> pos, sf::Sprite &sn, sf::Sprite &sh) : GuiElement(pos) {
+	action = _action;
 	spr = sn;
 	spr_hover = sh;
 	

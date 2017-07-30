@@ -4,6 +4,7 @@
 #include "SpriteHandler.hpp"
 #include "IsoEngine.hpp"
 #include "GuiEnv.hpp"
+#include "CityEngine.hpp"
 
 using namespace sf;
 
@@ -14,6 +15,7 @@ int main() {
 	std::shared_ptr<SpriteHandler> spr	= std::make_shared<SpriteHandler>();
 	std::shared_ptr<IsoEngine> iso		= std::make_shared<IsoEngine>(spr, app);
 	std::shared_ptr<Gui> gui			= std::make_shared<Gui>(spr, app);
+	std::shared_ptr<CityEngine> engine	= std::make_shared<CityEngine>(); // make interface
 
 	while (app->isOpen()) {
 		Event e;

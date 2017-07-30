@@ -18,22 +18,22 @@ class Gui {
 				virtual void render(std::shared_ptr<sf::RenderWindow> app) = 0;
 				virtual void update(float dt, sf::Vector2i mouse) = 0;
 
+				Action action;
+				bool hover;
+
 			protected:
 				IsoEngine::Coord<float> position;
-				GuiElement(IsoEngine::Coord<float> pos) : position(pos), action(nullptr) {}
-
-				Action action;
+				GuiElement(IsoEngine::Coord<float> pos, Action a = nullptr) : position(pos), action(a), hover(false) {}
 			};
 
 		class GuiButton : public GuiElement {
 			public:
-				GuiButton(IsoEngine::Coord<float> coord, sf::Sprite &sn, sf::Sprite &sh);
+				GuiButton(Action action, IsoEngine::Coord<float> coord, sf::Sprite &sn, sf::Sprite &sh);
 
 				void render(std::shared_ptr<sf::RenderWindow> app);
 				void update(float dt, sf::Vector2i mouse);
 
 			private:
-				bool hover;
 				sf::Sprite spr, spr_hover;
 		};
 
@@ -48,6 +48,7 @@ class Gui {
 		std::shared_ptr<SpriteHandler> sprHandler;
 		std::vector<std::shared_ptr<GuiElement>> elements;
 
-		std::shared_ptr<GuiElement> createElement(std::string name, IsoEngine::Coord<float> pos);
+		std::shared_ptr<GuiElement> createElement(std::string name, IsoEngine::Coord<float> pos, Action action = nullptr);
+
+		void action_btn_zone();
 };
-	
