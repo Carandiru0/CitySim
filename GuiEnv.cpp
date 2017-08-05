@@ -5,11 +5,12 @@
 using namespace sf;
 using namespace std;
 
-Gui::Gui(shared_ptr<SpriteHandler> spr, shared_ptr<RenderWindow> _app) {
+Gui::Gui(shared_ptr<SpriteHandler> spr, shared_ptr<RenderWindow> _app, std::shared_ptr<CityEngine> _engine) {
 	app = _app;
+	engine = _engine;
 	sprHandler = spr;
 
-	elements.push_back(createElement("btn_zone", IsoEngine::Coord<float>(42, 620), &Gui::action_btn_zone));
+	elements.push_back(createElement("btn_zone", City::Coord<float>(42, 620), &Gui::action_btn_zone));
 }
 
 void Gui::render(float dt) {
@@ -23,7 +24,7 @@ void Gui::events(Event &e) {
 
 		for (unsigned i = 0; i < elements.size(); i++)
 			elements[i]->update(0, mouse);
-	} if (e.type == Event::MouseButtonReleased) {
+	} else if (e.type == Event::MouseButtonReleased) {
 		if (e.mouseButton.button == Mouse::Left) {
 			for (unsigned i = 0; i < elements.size(); i++) {
 				if (elements[i]->hover && elements[i]->action != nullptr)
@@ -33,7 +34,7 @@ void Gui::events(Event &e) {
 	}
 }
 
-shared_ptr<Gui::GuiElement> Gui::createElement(string name, IsoEngine::Coord<float> pos, Action action) {
+shared_ptr<Gui::GuiElement> Gui::createElement(string name, City::Coord<float> pos, Action action) {
 	Sprite sn = sprHandler->create(name);
 	Sprite sh = sprHandler->create(name + "_hov");
 	
@@ -41,10 +42,16 @@ shared_ptr<Gui::GuiElement> Gui::createElement(string name, IsoEngine::Coord<flo
 }
 
 void Gui::action_btn_zone() {
-	cout << "Action called\n";
+	City::Zone zone = {
+		City::Coord<int>(2, 2),
+		City::Coord<int>(6, 6),
+		City::Zone::Residential
+	};
+
+	engine->action_highlightZone(zone);
 }
 
-Gui::GuiButton::GuiButton(Action _action, IsoEngine::Coord<float> pos, sf::Sprite &sn, sf::Sprite &sh) : GuiElement(pos) {
+Gui::GuiButton::GuiButton(Action _action, City::Coord<float> pos, sf::Sprite &sn, sf::Sprite &sh) : GuiElement(pos) {
 	action = _action;
 	spr = sn;
 	spr_hover = sh;

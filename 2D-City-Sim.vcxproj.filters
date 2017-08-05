@@ -30,6 +30,9 @@
     <ClCompile Include="GuiEnv.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CityEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IsoEngine.hpp">
@@ -42,6 +45,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AnimatedSprite.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CityEngine.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineInterface.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

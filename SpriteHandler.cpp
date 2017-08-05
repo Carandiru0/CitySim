@@ -9,6 +9,7 @@ SpriteHandler::SpriteHandler()
 
 	sprites["grass"]		= main_sheet.get(0, 0);
 	sprites["pavement"]		= main_sheet.get(0, 1);
+	sprites["zone_res"]		= main_sheet.get(1, 0);
 	sprites["building1"]	= main_sheet.get(0, 2, 2);
 
 	sprites["btn_zone"]		= gui_sheet.get(0, 0);
