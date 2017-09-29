@@ -17,6 +17,8 @@ int main() {
 	std::shared_ptr<CityEngine> engine	= std::make_shared<CityEngine>(iso);
 	std::shared_ptr<Gui> gui			= std::make_shared<Gui>(spr, app, engine);
 
+	Clock timer;
+
 	while (app->isOpen()) {
 		Event e;
 
@@ -28,6 +30,8 @@ int main() {
 
 			gui->events(e);
 		}
+
+		engine->update((float)timer.getElapsedTime().asMilliseconds());
 
 		app->clear(Color(119, 181, 254));
 		

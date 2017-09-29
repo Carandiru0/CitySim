@@ -11,21 +11,27 @@ class CityEngine {
 	public:
 		CityEngine(std::shared_ptr<EngineInterface> renderer);
 
+		void update(float dt);
+
 	private:
 		std::shared_ptr<EngineInterface> renderer;
 
 		std::map<std::string, double> sValues;
 		std::map<std::string, double> dValues;
 
-		std::vector<std::shared_ptr<City::CityMap>> maps;
+		std::shared_ptr<City::CityMap<City::Tile>> map_ground;
+		std::shared_ptr<City::CityMap<City::Building>> map_build;
+		std::shared_ptr<City::CityMap<City::Tile>> map_zones;
 
 		enum MapLayers { Ground, Build, Zones };
 
 		void initMaps();
 		void initValues();
 
+		float speed, counter;
+
 	public:
-		void action_highlightZone(City::Zone zone) { renderer->highlightZone(zone); };
+		void action_highlightZone(City::Zone zone);
 
 	private:
 		
