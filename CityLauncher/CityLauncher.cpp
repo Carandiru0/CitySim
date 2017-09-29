@@ -10,12 +10,19 @@
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
-HBITMAP bg = NULL;
+HBITMAP bg;
+HFONT font_gui;
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
+
+// Methods
+void create_font(HFONT &font, HWND hwnd, LPWSTR name, int size);
+void paint_image(HDC hdc, int image);
+void create_textbox(HWND hwnd, int x, int y, int w, int h);
+void create_passbox(HWND hwnd, int x, int y, int w, int h);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -33,9 +40,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MyRegisterClass(hInstance);
 
     // Perform application initialization:
-    if (!InitInstance(hInstance, nCmdShow)) {
+    if (!InitInstance(hInstance, nCmdShow))
         return FALSE;
-    }
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CITYLAUNCHER));
     MSG msg;
@@ -73,13 +79,12 @@ ATOM MyRegisterClass(HINSTANCE hInstance) {
 
 
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
-   hInst = hInstance; // Store instance handle in our global variable
+   hInst = hInstance;
 
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPED | WS_SYSMENU, CW_USEDEFAULT, 0, 640, 480, nullptr, nullptr, hInstance, nullptr);
 
-   if (!hWnd) {
+   if (!hWnd)
       return FALSE;
-   }
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
@@ -100,48 +105,90 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
     switch (message) {
 		case WM_CREATE: {
+				create_font(font_gui, hWnd, L"Consolas", 16);
+
 				bg = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BGIMG));
 
-				if (bg == NULL)
+				if (!bg)
 					MessageBox(hWnd, L"Cannot load bg", L"Error", MB_ICONERROR);
-			}
-			break;
 
-		case WM_COMMAND: {
-				int wmId = LOWORD(wParam);
-				// Parse the menu selections:
-				switch (wmId)
-				{
-				default:
-					return DefWindowProc(hWnd, message, wParam, lParam);
-				}
+				create_textbox(hWnd, 160, 150, 320, 32);
+				create_passbox(hWnd, 160, 220, 320, 32);
 			}
+
 			break;
 
 		case WM_PAINT: {
 				PAINTSTRUCT ps;
 				HDC hdc = BeginPaint(hWnd, &ps);
 
-				BITMAP b_bg;
-				HDC m_bg = CreateCompatibleDC(hdc);
-				HBITMAP h_bg = (HBITMAP)SelectObject(m_bg, bg);
-				
-				GetObject(bg, sizeof(b_bg), &b_bg);
-
-				BitBlt(hdc, 0, 0, b_bg.bmWidth, b_bg.bmHeight, m_bg, 0, 0, SRCCOPY);
-
-				SelectObject(m_bg, h_bg);
-				DeleteDC(m_bg);
+				paint_image(hdc, IDB_BGIMG);
 
 				EndPaint(hWnd, &ps);
 			}
+
 			break;
+
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			break;
+
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
     }
 
     return 0;
+}
+
+void create_font(HFONT &font, HWND hwnd, LPWSTR name, int size) {
+	HDC hdc;
+	HFONT fnt;
+	long height;
+	
+	hdc = GetDC(hwnd);
+	height = -MulDiv(size, GetDeviceCaps(hdc, LOGPIXELSY), 72);
+	ReleaseDC(hwnd, hdc);
+
+	fnt = CreateFont(height, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, name);
+
+	if (fnt) {
+		DeleteObject(font);
+		font = fnt;
+	} else
+		MessageBox(hwnd, L"Font creation failed!", L"Error", MB_OK | MB_ICONEXCLAMATION);
+}
+
+void paint_image(HDC hdc, int image) {
+	BITMAP b_bg;
+	HDC m_bg = CreateCompatibleDC(hdc);
+	HBITMAP h_bg = (HBITMAP)SelectObject(m_bg, bg);
+
+	GetObject(bg, sizeof(b_bg), &b_bg);
+
+	BitBlt(hdc, 0, 0, b_bg.bmWidth, b_bg.bmHeight, m_bg, 0, 0, SRCCOPY);
+
+	SelectObject(m_bg, h_bg);
+	DeleteDC(m_bg);
+}
+
+void create_textbox(HWND hwnd, int x, int y, int w, int h) {
+	HWND control;
+
+	control = CreateWindowExW(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE, x, y, w, h, hwnd, (HMENU)IDC_TEXT_USR, hInst, nullptr);
+	
+	if (!control)
+		MessageBox(hwnd, L"Could not create edit box.", L"Error", MB_OK | MB_ICONERROR);
+
+	SendMessage(control, WM_SETFONT, (WPARAM)font_gui, MAKELPARAM(FALSE, 0));
+}
+
+void create_passbox(HWND hwnd, int x, int y, int w, int h) {
+	HWND control;
+
+	control = CreateWindowExW(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE | ES_PASSWORD, x, y, w, h, hwnd, (HMENU)IDC_TEXT_USR, hInst, nullptr);
+
+	if (!control)
+		MessageBox(hwnd, L"Could not create edit box.", L"Error", MB_OK | MB_ICONERROR);
+
+	SendMessage(control, WM_SETFONT, (WPARAM)font_gui, MAKELPARAM(FALSE, 0));
 }
