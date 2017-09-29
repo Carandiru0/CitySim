@@ -1,0 +1,4 @@
+﻿  CityLauncher.cpp
+c:\users\matty\documents\projects\2d-city-sim\citylauncher\citylauncher.cpp(117): warning C4065: switch statement contains 'default' but no 'case' labels
+  CityLauncher.vcxproj -> C:\Users\Matty\Documents\Projects\2D-City-Sim\Debug\CityLauncher.exe
+  CityLauncher.vcxproj -> C:\Users\Matty\Documents\Projects\2D-City-Sim\Debug\CityLauncher.pdb (Partial PDB)
