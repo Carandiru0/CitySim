@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2D-City-Sim", "2D-City-Sim.vcxproj", "{64BDA7C8-30DB-4AA9-93A9-EBCC6DE1BC11}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2D-City-Sim", "game/2D-City-Sim.vcxproj", "{64BDA7C8-30DB-4AA9-93A9-EBCC6DE1BC11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
