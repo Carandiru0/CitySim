@@ -8,7 +8,7 @@
 #include <curl/curl.h>
 #include <string>
 
-#define MAX_LOADSTRING 100
+#define MAX_LOADSTRING 256
 
 // Global Variables:
 HINSTANCE hInst;                                // current instance
@@ -47,9 +47,9 @@ std::string wstrtostr(const std::wstring &wstr) {
 
 const wchar_t *GetWC(const char *c) {
 	size_t len = 0;
-	wchar_t wc[MAX_LOADSTRING];
+	wchar_t *wc = new wchar_t[(strlen(c) + 1) * 2];
 
-	mbstowcs_s(&len, wc, c, strlen(c) + 1);
+	mbstowcs_s(&len, wc, (strlen(c) + 1) * 2, c, _TRUNCATE);
 
 	return wc;
 }
@@ -204,7 +204,37 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 
 					get_response(curl, "localhost/city/api.php?login", &data, postdata);
 
-					MessageBox(hWnd, GetWC(data.c_str()), L"Response", MB_OK);
+					if(data.substr(0, 2) != "OK")
+						MessageBox(hWnd, GetWC(data.c_str()), L"Error", MB_OK | MB_ICONINFORMATION);
+					else {
+						std::string sessid = data.substr(3, data.length() - 3);
+						std::string cmd = "-sess " + sessid;
+
+						STARTUPINFOA si;
+						PROCESS_INFORMATION pi;
+
+						ZeroMemory(&si, sizeof(si));
+						si.cb = sizeof(si);
+						ZeroMemory(&pi, sizeof(pi));
+
+						// start the program up
+						CreateProcessA("2D-City-Sim.exe",   // the path
+							(LPSTR)cmd.c_str(),      // Command line
+							NULL,           // Process handle not inheritable
+							NULL,           // Thread handle not inheritable
+							FALSE,          // Set handle inheritance to FALSE
+							0,              // No creation flags
+							NULL,           // Use parent's environment block
+							NULL,           // Use parent's starting directory 
+							&si,            // Pointer to STARTUPINFO structure
+							&pi             // Pointer to PROCESS_INFORMATION structure (removed extra parentheses)
+						);
+
+						CloseHandle(pi.hProcess);
+						CloseHandle(pi.hThread);
+
+						//exit(0);
+					}
 
 					break;
 			}

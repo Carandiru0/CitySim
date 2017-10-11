@@ -9,6 +9,19 @@
 using namespace sf;
 
 int main() {
+	/*if (argc < 3)
+		return 1;
+
+	if (argv[1] != "-sess")
+		return 1;
+
+	for (int i = 0; i < argc; i++)
+		std::cout << argv[i] << std::endl;
+
+	//std::string sessid = argv[2];
+
+	//std::cout << sessid << std::endl;*/
+
 	std::shared_ptr<RenderWindow> app = std::make_shared<RenderWindow>(VideoMode(1024, 768), "2D City Sim");
 	app->setVerticalSyncEnabled(true);
 
