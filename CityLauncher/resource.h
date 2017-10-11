@@ -12,6 +12,9 @@
 #define IDR_MAINFRAME                   128
 #define IDB_BGIMG                       131
 #define IDC_TEXT_USR					160
+#define IDC_TEXT_PWD					161
+#define IDC_PANEL1						150
+#define IDC_BTN_LOGIN					151
 #define IDC_STATIC                      -1
 
 // Next default values for new objects

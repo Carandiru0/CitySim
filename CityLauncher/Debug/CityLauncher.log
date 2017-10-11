@@ -1,4 +1,6 @@
 ﻿  CityLauncher.cpp
-c:\users\matty\documents\projects\2d-city-sim\citylauncher\citylauncher.cpp(117): warning C4065: switch statement contains 'default' but no 'case' labels
+c:\users\matty\documents\projects\2d-city-sim\citylauncher\citylauncher.cpp(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\matty\documents\projects\2d-city-sim\citylauncher\citylauncher.cpp(308): warning C4101: 'e': unreferenced local variable
+c:\users\matty\documents\projects\2d-city-sim\citylauncher\citylauncher.cpp(54): warning C4172: returning address of local variable or temporary: wc
   CityLauncher.vcxproj -> C:\Users\Matty\Documents\Projects\2D-City-Sim\Debug\CityLauncher.exe
   CityLauncher.vcxproj -> C:\Users\Matty\Documents\Projects\2D-City-Sim\Debug\CityLauncher.pdb (Partial PDB)

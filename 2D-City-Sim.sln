@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2D-City-Sim", "game\2D-City
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CityLauncher", "CityLauncher\CityLauncher.vcxproj", "{63DE34B1-8FC9-47E6-B3A9-A35502372150}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CityServer", "CityServer\CityServer.vcxproj", "{D091AD70-5FE6-4A64-AA01-99DC77DD3116}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{63DE34B1-8FC9-47E6-B3A9-A35502372150}.Release|x64.Build.0 = Release|x64
 		{63DE34B1-8FC9-47E6-B3A9-A35502372150}.Release|x86.ActiveCfg = Release|Win32
 		{63DE34B1-8FC9-47E6-B3A9-A35502372150}.Release|x86.Build.0 = Release|Win32
+		{D091AD70-5FE6-4A64-AA01-99DC77DD3116}.Debug|x64.ActiveCfg = Debug|x64
+		{D091AD70-5FE6-4A64-AA01-99DC77DD3116}.Debug|x64.Build.0 = Debug|x64
+		{D091AD70-5FE6-4A64-AA01-99DC77DD3116}.Debug|x86.ActiveCfg = Debug|Win32
+		{D091AD70-5FE6-4A64-AA01-99DC77DD3116}.Debug|x86.Build.0 = Debug|Win32
+		{D091AD70-5FE6-4A64-AA01-99DC77DD3116}.Release|x64.ActiveCfg = Release|x64
+		{D091AD70-5FE6-4A64-AA01-99DC77DD3116}.Release|x64.Build.0 = Release|x64
+		{D091AD70-5FE6-4A64-AA01-99DC77DD3116}.Release|x86.ActiveCfg = Release|Win32
+		{D091AD70-5FE6-4A64-AA01-99DC77DD3116}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

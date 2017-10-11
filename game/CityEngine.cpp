@@ -4,11 +4,13 @@
 
 using namespace std;
 
-CityEngine::CityEngine(std::shared_ptr<EngineInterface> _renderer) {
+CityEngine::CityEngine(shared_ptr<EngineInterface> _renderer) {
 	renderer = _renderer;
 
 	initValues();
 	initMaps();
+
+	net = make_shared<Net>(15817);
 
 	speed = 1000.0f;
 	counter = speed;

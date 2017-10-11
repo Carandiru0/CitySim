@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 
+#include "Net.hpp"
 #include "EngineInterface.hpp"
 
 class CityEngine {
@@ -15,6 +16,7 @@ class CityEngine {
 
 	private:
 		std::shared_ptr<EngineInterface> renderer;
+		std::shared_ptr<Net> net;
 
 		std::map<std::string, double> sValues;
 		std::map<std::string, double> dValues;
