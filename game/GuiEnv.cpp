@@ -5,11 +5,10 @@
 using namespace sf;
 using namespace std;
 
-Gui::Gui(shared_ptr<SpriteHandler> spr, shared_ptr<RenderWindow> _app, std::shared_ptr<CityEngine> _engine) {
+Gui::Gui(const SpriteHandler &spr, shared_ptr<RenderWindow> _app, const CityEngine &_engine)
+	: engine(_engine), sprHandler(spr)
+{
 	app = _app;
-	engine = _engine;
-	sprHandler = spr;
-
 	elements.push_back(createElement("btn_zone", City::Coord<float>(42, 620), &Gui::action_btn_zone));
 }
 
@@ -35,8 +34,8 @@ void Gui::events(Event &e) {
 }
 
 shared_ptr<Gui::GuiElement> Gui::createElement(string name, City::Coord<float> pos, Action action) {
-	Sprite sn = sprHandler->create(name);
-	Sprite sh = sprHandler->create(name + "_hov");
+	Sprite sn = sprHandler.create(name);
+	Sprite sh = sprHandler.create(name + "_hov");
 	
 	return std::shared_ptr<GuiElement>(new GuiButton(action, pos, sn, sh));
 }
@@ -48,7 +47,7 @@ void Gui::action_btn_zone() {
 		City::Zone::Residential
 	};
 
-	engine->action_highlightZone(zone);
+	engine.action_highlightZone(zone);
 }
 
 Gui::GuiButton::GuiButton(Action _action, City::Coord<float> pos, sf::Sprite &sn, sf::Sprite &sh) : GuiElement(pos) {

@@ -1,5 +1,4 @@
-﻿  CityLauncher.cpp
-c:\users\matty\documents\projects\2d-city-sim\citylauncher\citylauncher.cpp(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\matty\documents\projects\2d-city-sim\citylauncher\citylauncher.cpp(338): warning C4101: 'e': unreferenced local variable
+﻿  stdafx.cpp
+  CityLauncher.cpp
   CityLauncher.vcxproj -> C:\Users\Matty\Documents\Projects\2D-City-Sim\Debug\CityLauncher.exe
   CityLauncher.vcxproj -> C:\Users\Matty\Documents\Projects\2D-City-Sim\Debug\CityLauncher.pdb (Partial PDB)

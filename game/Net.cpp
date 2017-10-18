@@ -22,39 +22,29 @@ Net::Net(unsigned short port) {
 		cerr << "No available peers for initializing an ENet connection";
 		exit(1);
 	}
+}
 
-	int eventStatus = 1;
+void Net::update() {
+	int status = enet_host_service(client, &event, 100);
 
-	while (1) {
-		eventStatus = enet_host_service(client, &event, 1000);
+	if (status >= 0) {
+		switch (event.type) {
+		case ENET_EVENT_TYPE_CONNECT:
+			cout << "Connected to " << event.peer->address.host << "\n";
 
-		if (eventStatus >= 0) {
-			switch (event.type) {
-				case ENET_EVENT_TYPE_CONNECT:
-					cout << "Connected to " << event.peer->address.host << "\n";
-				
-					break;
+			break;
 
-				case ENET_EVENT_TYPE_RECEIVE:
-					printf("(Client) Message from server : %s\n", event.packet->data);
-					enet_packet_destroy(event.packet);
-					break;
+		case ENET_EVENT_TYPE_RECEIVE:
+			printf("(Client) Message from server : %s\n", event.packet->data);
+			enet_packet_destroy(event.packet);
+			break;
 
-				case ENET_EVENT_TYPE_DISCONNECT:
-					cout << "Disconnected from " << event.peer->address.host << "\n";
-					event.peer->data = NULL;
+		case ENET_EVENT_TYPE_DISCONNECT:
+			cout << "Disconnected from " << event.peer->address.host << "\n";
+			event.peer->data = NULL;
 
-					break;
-			}
+			break;
 		}
-
-		/*printf("Say > ");
-		gets(message);
-
-		if (strlen(message) > 0) {
-			ENetPacket *packet = enet_packet_create(message, strlen(message) + 1, ENET_PACKET_FLAG_RELIABLE);
-			enet_peer_send(peer, 0, packet);
-		}*/
 	}
 }
 

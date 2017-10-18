@@ -38,15 +38,16 @@ class Gui {
 		};
 
 	public:
-		Gui(std::shared_ptr<SpriteHandler> sprHandler, std::shared_ptr<sf::RenderWindow> app, std::shared_ptr<CityEngine> engine);
+		Gui(const SpriteHandler &sprHandler, std::shared_ptr<sf::RenderWindow> app, const CityEngine &engine);
 
 		void render(float dt);
 		void events(sf::Event &e);
 
 	private:
+		CityEngine engine;
+		SpriteHandler sprHandler;
+
 		std::shared_ptr<sf::RenderWindow> app;
-		std::shared_ptr<CityEngine> engine;
-		std::shared_ptr<SpriteHandler> sprHandler;
 		std::vector<std::shared_ptr<GuiElement>> elements;
 
 		std::shared_ptr<GuiElement> createElement(std::string name, City::Coord<float> pos, Action action = nullptr);

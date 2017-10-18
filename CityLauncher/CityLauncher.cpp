@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "atlstr.h";
+#include "atlstr.h"
 #include "CityLauncher.h"
 
 #include <curl/curl.h>
@@ -218,22 +218,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 						ZeroMemory(&pi, sizeof(pi));
 
 						// start the program up
-						CreateProcessA("2D-City-Sim.exe",   // the path
-							(LPSTR)cmd.c_str(),      // Command line
-							NULL,           // Process handle not inheritable
-							NULL,           // Thread handle not inheritable
-							FALSE,          // Set handle inheritance to FALSE
-							0,              // No creation flags
-							NULL,           // Use parent's environment block
-							NULL,           // Use parent's starting directory 
-							&si,            // Pointer to STARTUPINFO structure
-							&pi             // Pointer to PROCESS_INFORMATION structure (removed extra parentheses)
-						);
+						CreateProcessA("2D-City-Sim.exe", (LPSTR)cmd.c_str(), NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
 
 						CloseHandle(pi.hProcess);
 						CloseHandle(pi.hThread);
 
-						//exit(0);
+						exit(0);
 					}
 
 					break;
@@ -336,6 +326,7 @@ size_t get_data(void *contents, size_t size, size_t nmemb, std::string *s) {
 	try {
 		s->resize(oldLength + newLength);
 	} catch (std::bad_alloc &e) {
+		UNREFERENCED_PARAMETER(e);
 		return 0;
 	}
 

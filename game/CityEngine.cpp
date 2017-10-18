@@ -4,9 +4,7 @@
 
 using namespace std;
 
-CityEngine::CityEngine(shared_ptr<EngineInterface> _renderer) {
-	renderer = _renderer;
-
+CityEngine::CityEngine(EngineInterface *_renderer) : renderer(_renderer) {
 	initValues();
 	initMaps();
 

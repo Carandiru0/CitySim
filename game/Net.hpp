@@ -10,6 +10,8 @@ class Net {
 		Net(unsigned short port);
 		~Net();
 
+		void update();
+
 	private:
 		ENetHost *client;
 		ENetAddress address;

@@ -12,7 +12,7 @@
 
 class IsoEngine : public EngineInterface {
 	public:
-		IsoEngine(std::shared_ptr<SpriteHandler> sprHandler, std::shared_ptr<sf::RenderWindow> app);
+		IsoEngine(const SpriteHandler &sprHandler, std::shared_ptr<sf::RenderWindow> app);
 
 		class IsoMap {
 			public:
@@ -48,7 +48,7 @@ class IsoEngine : public EngineInterface {
 
 	private:
 		std::vector<std::shared_ptr<IsoMap>> map_layers;
-		std::shared_ptr<SpriteHandler> sprHandler;
+		SpriteHandler sprHandler;
 		std::shared_ptr<sf::RenderWindow> app;
 		std::map<std::string, IsoMap::TileDef> tiles;
 

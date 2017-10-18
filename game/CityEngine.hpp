@@ -10,12 +10,12 @@
 
 class CityEngine {
 	public:
-		CityEngine(std::shared_ptr<EngineInterface> renderer);
+		CityEngine(EngineInterface *renderer);
 
 		void update(float dt);
 
 	private:
-		std::shared_ptr<EngineInterface> renderer;
+		EngineInterface *renderer;
 		std::shared_ptr<Net> net;
 
 		std::map<std::string, double> sValues;

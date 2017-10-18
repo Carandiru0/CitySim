@@ -6,14 +6,17 @@ using namespace sf;
 using namespace std;
 using namespace City;
 
-IsoEngine::IsoEngine(shared_ptr<SpriteHandler> _spr, std::shared_ptr<RenderWindow> _app) {
+IsoEngine::IsoEngine(const SpriteHandler &_spr, std::shared_ptr<RenderWindow> _app)
+	: sprHandler(_spr)
+{
 	app = _app;
-	sprHandler = _spr;
 
-	tiles["grass"]		= { sprHandler->create("grass") };
-	tiles["pavement"]	= { sprHandler->create("pavement") };
-	tiles["building1"]	= { sprHandler->create("building1") };
-	tiles["zone_res"]	= { sprHandler->create("zone_res") };
+	tiles["grass"]		= { sprHandler.create("grass") };
+	tiles["pavement"]	= { sprHandler.create("pavement") };
+	tiles["building1"]	= { sprHandler.create("building1") };
+	tiles["building2"]  = { sprHandler.create("building2") };
+	tiles["building3"]  = { sprHandler.create("building3") };
+	tiles["zone_res"]	= { sprHandler.create("zone_res") };
 
 	map_layers.push_back(make_shared<IsoMap>(13, 13));
 	map_layers.push_back(make_shared<IsoMap>(13, 13));
@@ -25,14 +28,15 @@ IsoEngine::IsoEngine(shared_ptr<SpriteHandler> _spr, std::shared_ptr<RenderWindo
 		for (int x = 0; x < map_layers[Ground]->getW(); x++)
 			setTile(Coord<int>(x, y), "grass");
 
-	setTile(Coord<int>(4, 4), "pavement");
-	setTile(Coord<int>(4, 4), "building1", 1);
+	setTile(Coord<int>(2, 2), "building1", 1);
+	setTile(Coord<int>(3, 2), "building2", 1);
+	setTile(Coord<int>(4, 2), "building3", 1);
 }
 
 void IsoEngine::render() {
 	for (int y = 0; y < map_layers[Ground]->getH(); y++) {
 		for (int x = 0; x < map_layers[Ground]->getW(); x++) {
-			for (int z = 0; z < map_layers.size(); z++) {
+			for (unsigned z = 0; z < map_layers.size(); z++) {
 				if (map_layers[z]->isActive()) {
 					shared_ptr<IsoMap::Tile> tile = map_layers[z]->data[y][x];
 
