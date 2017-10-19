@@ -43,11 +43,3 @@ void CityEngine::initValues() {
 
 	dValues["demand_res"] = 1;
 }
-
-void CityEngine::action_highlightZone(City::Zone zone) {
-	renderer->highlightZone(zone);
-	
-	for (int y = zone.begin.y; y < zone.end.y; y++)
-		for (int x = zone.begin.x; x < zone.end.x; x++)
-			map_zones->set(x, y, std::make_shared<City::Tile>("zone_res"));
-}

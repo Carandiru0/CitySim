@@ -33,7 +33,7 @@ class CityEngine {
 		float speed, counter;
 
 	public:
-		void action_highlightZone(City::Zone zone);
+		
 
 	private:
 		

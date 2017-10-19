@@ -9,7 +9,7 @@ Gui::Gui(const SpriteHandler &spr, shared_ptr<RenderWindow> _app, const CityEngi
 	: engine(_engine), sprHandler(spr)
 {
 	app = _app;
-	elements.push_back(createElement("btn_zone", City::Coord<float>(42, 620), &Gui::action_btn_zone));
+	//elements.push_back(createElement("btn_zone", City::Coord<float>(42, 620), &Gui::action_btn_zone));
 }
 
 void Gui::render(float dt) {
@@ -38,16 +38,6 @@ shared_ptr<Gui::GuiElement> Gui::createElement(string name, City::Coord<float> p
 	Sprite sh = sprHandler.create(name + "_hov");
 	
 	return std::shared_ptr<GuiElement>(new GuiButton(action, pos, sn, sh));
-}
-
-void Gui::action_btn_zone() {
-	City::Zone zone = {
-		City::Coord<int>(2, 2),
-		City::Coord<int>(6, 6),
-		City::Zone::Residential
-	};
-
-	engine.action_highlightZone(zone);
 }
 
 Gui::GuiButton::GuiButton(Action _action, City::Coord<float> pos, sf::Sprite &sn, sf::Sprite &sh) : GuiElement(pos) {

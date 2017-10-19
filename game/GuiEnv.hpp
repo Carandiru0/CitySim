@@ -51,6 +51,4 @@ class Gui {
 		std::vector<std::shared_ptr<GuiElement>> elements;
 
 		std::shared_ptr<GuiElement> createElement(std::string name, City::Coord<float> pos, Action action = nullptr);
-
-		void action_btn_zone();
 };

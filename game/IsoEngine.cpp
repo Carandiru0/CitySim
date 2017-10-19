@@ -17,6 +17,10 @@ IsoEngine::IsoEngine(const SpriteHandler &_spr, std::shared_ptr<RenderWindow> _a
 	tiles["building2"]  = { sprHandler.create("building2") };
 	tiles["building3"]  = { sprHandler.create("building3") };
 	tiles["zone_res"]	= { sprHandler.create("zone_res") };
+	tiles["road_v"]		= { sprHandler.create("road_v") };
+	tiles["road_h"]		= { sprHandler.create("road_h") };
+	tiles["road_t"]		= { sprHandler.create("road_t") };
+	tiles["road_b"]		= { sprHandler.create("road_b") };
 
 	map_layers.push_back(make_shared<IsoMap>(13, 13));
 	map_layers.push_back(make_shared<IsoMap>(13, 13));
@@ -27,10 +31,6 @@ IsoEngine::IsoEngine(const SpriteHandler &_spr, std::shared_ptr<RenderWindow> _a
 	for (int y = 0; y < map_layers[Ground]->getH(); y++)
 		for (int x = 0; x < map_layers[Ground]->getW(); x++)
 			setTile(Coord<int>(x, y), "grass");
-
-	setTile(Coord<int>(2, 2), "building1", 1);
-	setTile(Coord<int>(3, 2), "building2", 1);
-	setTile(Coord<int>(4, 2), "building3", 1);
 }
 
 void IsoEngine::render() {
@@ -69,16 +69,6 @@ inline Coord<float> IsoEngine::iso_xy(Coord<float> iso) {
 
 inline Coord<float> IsoEngine::origin(std::shared_ptr<IsoMap> map) {
 	return Coord<float>(512.f, 384.f - (float)(map->getH() * 16));
-}
-
-void IsoEngine::highlightZone(City::Zone zone) {
-	map_layers[Zones]->activate();
-
-	cout << "Zone\n";
-
-	for (int y = zone.begin.y; y < zone.end.y; y++)
-		for (int x = zone.begin.x; x < zone.end.x; x++)
-			setTile(Coord<int>(x, y), "zone_res", 2);
 }
 
 IsoEngine::IsoMap::IsoMap(int _w, int _h, bool a) : active(a) {

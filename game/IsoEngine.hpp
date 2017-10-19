@@ -44,15 +44,12 @@ class IsoEngine : public EngineInterface {
 		};
 
 		void render();
-		void setTile(City::Coord<int> position, std::string tile, int layer = Ground);
 
 	private:
 		std::vector<std::shared_ptr<IsoMap>> map_layers;
 		SpriteHandler sprHandler;
 		std::shared_ptr<sf::RenderWindow> app;
 		std::map<std::string, IsoMap::TileDef> tiles;
-
-		enum MapLayers { Ground, Build, Zones };
 
 		City::Coord<float> offset;
 
@@ -61,5 +58,5 @@ class IsoEngine : public EngineInterface {
 		inline City::Coord<float> origin(std::shared_ptr<IsoMap> map);
 
 	public:
-		void highlightZone(City::Zone zone);
+		void setTile(City::Coord<int> position, std::string tile, int layer = Ground);
 };

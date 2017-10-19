@@ -99,5 +99,7 @@ namespace City {
 
 class EngineInterface {
 	public:
-		virtual void highlightZone(City::Zone zone) = 0;
+		enum MapLayers { Ground, Build, Zones };
+
+		virtual void setTile(City::Coord<int> position, std::string tile, int layer = Ground) = 0;
 };
