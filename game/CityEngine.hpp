@@ -18,12 +18,13 @@ class CityEngine {
 		EngineInterface *renderer;
 		std::shared_ptr<Net> net;
 
+		long pop;
+
 		std::map<std::string, double> sValues;
 		std::map<std::string, double> dValues;
 
 		std::shared_ptr<City::CityMap<City::Tile>> map_ground;
 		std::shared_ptr<City::CityMap<City::Building>> map_build;
-		std::shared_ptr<City::CityMap<City::Tile>> map_zones;
 
 		enum MapLayers { Ground, Build, Zones };
 
@@ -31,6 +32,8 @@ class CityEngine {
 		void initValues();
 
 		float speed, counter;
+
+		void setTile(int x, int y, std::string tile);
 
 	public:
 		

@@ -28,9 +28,9 @@ IsoEngine::IsoEngine(const SpriteHandler &_spr, std::shared_ptr<RenderWindow> _a
 
 	offset = origin(map_layers[Ground]);
 
-	for (int y = 0; y < map_layers[Ground]->getH(); y++)
-		for (int x = 0; x < map_layers[Ground]->getW(); x++)
-			setTile(Coord<int>(x, y), "grass");
+	//for (int y = 0; y < map_layers[Ground]->getH(); y++)
+	//	for (int x = 0; x < map_layers[Ground]->getW(); x++)
+	//		setTile(Coord<int>(x, y), "grass");
 }
 
 void IsoEngine::render() {
