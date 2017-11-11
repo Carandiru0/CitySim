@@ -30,6 +30,12 @@ void Gui::events(Event &e) {
 					(this->*elements[i]->action)();
 			}
 		}
+	} else if (e.type == Event::KeyReleased) {
+		switch (e.key.code) {
+			case Keyboard::E:
+				engine.expandRoads();
+				break;
+		}
 	}
 }
 

@@ -168,6 +168,7 @@
     <ClInclude Include="IsoEngine.hpp" />
     <ClInclude Include="Net.hpp" />
     <ClInclude Include="SpriteHandler.hpp" />
+    <ClInclude Include="Vec3D.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NonCopyable.hpp" />

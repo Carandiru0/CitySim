@@ -27,17 +27,19 @@ class CityEngine {
 		std::shared_ptr<City::CityMap<City::Tile>> map_build;
 
 		City::Coord<int> center;
+
 		std::shared_ptr<City::RoadNetwork> roadNetwork;
+		std::vector<City::RoadNetwork::RoadNode> topRoads;
 
 		void initMaps();
 		void initValues();
 		
-		void expandRoads();
-		void updateRoadNetwork(City::RoadNetwork::RoadNode node, City::RoadNetwork::RoadNode prev);
+		void createRoadBetween(City::RoadNetwork::RoadNode n1, City::RoadNetwork::RoadNode n2);
 		void setTile(int x, int y, std::string tile, int layer = 1);
 
 	public:
-		
+		void expandRoads();
+		void updateRoadNetwork(City::RoadNetwork::RoadNode node);
 
 	private:
 		

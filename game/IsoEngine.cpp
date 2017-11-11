@@ -23,9 +23,9 @@ IsoEngine::IsoEngine(const SpriteHandler &_spr, std::shared_ptr<RenderWindow> _a
 	tiles["road_t"]		= { sprHandler.create("road_t") };
 	tiles["road_b"]		= { sprHandler.create("road_b") };
 
-	map_layers.push_back(make_shared<IsoMap>(13, 13));
-	map_layers.push_back(make_shared<IsoMap>(13, 13));
-	map_layers.push_back(make_shared<IsoMap>(13, 13, false));
+	map_layers.push_back(make_shared<IsoMap>(17, 17));
+	map_layers.push_back(make_shared<IsoMap>(17, 17));
+	map_layers.push_back(make_shared<IsoMap>(17, 17, false));
 
 	offset = origin(map_layers[Ground]);
 
