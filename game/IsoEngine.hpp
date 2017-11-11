@@ -44,6 +44,7 @@ class IsoEngine : public EngineInterface {
 		};
 
 		void render();
+		City::Coord<int> getDimensions() { return dimensions; }
 
 	private:
 		std::vector<std::shared_ptr<IsoMap>> map_layers;
@@ -51,6 +52,7 @@ class IsoEngine : public EngineInterface {
 		std::shared_ptr<sf::RenderWindow> app;
 		std::map<std::string, IsoMap::TileDef> tiles;
 
+		City::Coord<int> dimensions;
 		City::Coord<float> offset;
 
 		inline City::Coord<float> xy_iso(City::Coord<float> xy);

@@ -98,11 +98,26 @@ namespace City {
 			int counter;
 			RoadNode root;
 	};
+
+	class Building {
+		public:
+			Building() {}
+
+			enum class BuildingType { Res, Ind, Com };
+
+			BuildingType getType() { return type; }
+			Coord<int> getPos() { return map_pos; }
+
+		private:
+			BuildingType type;
+			Coord<int> map_pos;
+	};
 }
 
 class EngineInterface {
 	public:
 		enum MapLayers { Ground, Build, Zones };
 
+		virtual City::Coord<int> getDimensions() = 0;
 		virtual void setTile(City::Coord<int> position, std::string tile, int layer = Ground) = 0;
 };

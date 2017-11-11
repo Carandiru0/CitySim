@@ -7,7 +7,7 @@ using namespace std;
 using namespace City;
 
 IsoEngine::IsoEngine(const SpriteHandler &_spr, std::shared_ptr<RenderWindow> _app)
-	: sprHandler(_spr)
+	: sprHandler(_spr), dimensions(53, 53)
 {
 	app = _app;
 
@@ -23,9 +23,9 @@ IsoEngine::IsoEngine(const SpriteHandler &_spr, std::shared_ptr<RenderWindow> _a
 	tiles["road_t"]		= { sprHandler.create("road_t") };
 	tiles["road_b"]		= { sprHandler.create("road_b") };
 
-	map_layers.push_back(make_shared<IsoMap>(17, 17));
-	map_layers.push_back(make_shared<IsoMap>(17, 17));
-	map_layers.push_back(make_shared<IsoMap>(17, 17, false));
+	map_layers.push_back(make_shared<IsoMap>(dimensions.x, dimensions.y));
+	map_layers.push_back(make_shared<IsoMap>(dimensions.x, dimensions.y));
+	map_layers.push_back(make_shared<IsoMap>(dimensions.x, dimensions.y, false));
 
 	offset = origin(map_layers[Ground]);
 

@@ -8,10 +8,12 @@ using namespace std;
 CityEngine::CityEngine(EngineInterface *_renderer) : renderer(_renderer) {
 	net = make_shared<Net>(15817);
 	
-	center.x = 8, center.y = 8;
+	dims = renderer->getDimensions();
+	center.x = dims.x / 2, center.y = dims.y / 2;
 
 	roadNetwork = make_shared<City::RoadNetwork>(center);
 
+	sect = 3;
 	speed = 1000.0f;
 	counter = speed;
 
@@ -24,8 +26,8 @@ void CityEngine::update(float dt) {
 }
 
 void CityEngine::initMaps() {
-	map_ground	= make_shared<City::CityMap<City::Tile>>(17, 17);
-	map_build	= make_shared<City::CityMap<City::Tile>>(17, 17);
+	map_ground	= make_shared<City::CityMap<City::Tile>>(dims.x, dims.y);
+	map_build	= make_shared<City::CityMap<City::Tile>>(dims.x, dims.y);
 
 	for (int y = 0; y < map_ground->getH(); y++) {
 		for (int x = 0; x < map_ground->getW(); x++) {
@@ -33,10 +35,10 @@ void CityEngine::initMaps() {
 		}
 	}
 
-	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::Coord<int>(8, 6)));
-	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::Coord<int>(10, 8)));
-	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::Coord<int>(8, 10)));
-	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::Coord<int>(6, 8)));
+	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::Coord<int>(center.x - sect, center.y)));
+	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::Coord<int>(center.x + sect, center.y)));
+	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::Coord<int>(center.x, center.y - sect)));
+	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::Coord<int>(center.x, center.y + sect)));
 
 	updateRoadNetwork(roadNetwork->getRoot());
 }
@@ -47,8 +49,8 @@ void CityEngine::expandRoads() {
 
 	for (auto road : tpRoads) {
 		Vec3D<int> dir(road->pos.x - road->parent->pos.x, 0, road->pos.y - road->parent->pos.y);
-		auto adj = dir.cross(Vec3D<int>(0, 1, 0)).normalised() * 2;
-		auto lne = dir.normalised() * 2;
+		auto adj = dir.cross(Vec3D<int>(0, 1, 0)).normalised() * sect;
+		auto lne = dir.normalised() * sect;
 
 		auto pos0 = road->pos + City::Coord<int>(lne.getX(), lne.getZ());
 		auto pos1 = road->pos + City::Coord<int>(adj.getX(), adj.getZ());
@@ -60,7 +62,8 @@ void CityEngine::expandRoads() {
 		topRoads.push_back(n1);
 	}
 
-	updateRoadNetwork(roadNetwork->getRoot());
+	for(auto road : topRoads)
+		updateRoadNetwork(road);
 }
 
 void CityEngine::updateRoadNetwork(City::RoadNetwork::RoadNode node) {
@@ -112,6 +115,18 @@ void CityEngine::setTile(int x, int y, string tile, int layer) {
 		map_build->set(x, y, std::make_shared<City::Tile>(tile));
 
 	renderer->setTile(City::Coord<int>(x, y), tile, layer);
+}
+
+bool CityEngine::doesTileExist(int x, int y, int layer) {
+	if (layer == 0) {
+		if (map_ground->get(x, y) != nullptr)
+			return true;
+	} else {
+		if (map_build->get(x, y) != nullptr)
+			return true;
+	}
+
+	return false;
 }
 
 void CityEngine::initValues() {

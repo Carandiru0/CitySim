@@ -18,6 +18,7 @@ class CityEngine {
 		EngineInterface *renderer;
 		std::shared_ptr<Net> net;
 
+		int sect;
 		long pop;
 		float speed, counter;
 
@@ -26,8 +27,9 @@ class CityEngine {
 		std::shared_ptr<City::CityMap<City::Tile>> map_ground;
 		std::shared_ptr<City::CityMap<City::Tile>> map_build;
 
-		City::Coord<int> center;
+		City::Coord<int> center, dims;
 
+		std::map<int, City::Building> buildings;
 		std::shared_ptr<City::RoadNetwork> roadNetwork;
 		std::vector<City::RoadNetwork::RoadNode> topRoads;
 
@@ -36,6 +38,7 @@ class CityEngine {
 		
 		void createRoadBetween(City::RoadNetwork::RoadNode n1, City::RoadNetwork::RoadNode n2);
 		void setTile(int x, int y, std::string tile, int layer = 1);
+		bool doesTileExist(int x, int y, int layer);
 
 	public:
 		void expandRoads();
