@@ -11,7 +11,9 @@ namespace City {
 		Coord(const Coord<T> &copy) { x = copy.x; y = copy.y; }
 
 		inline void operator+=(Coord<T> n) { x += n.x; y += n.y; }
+		inline void operator-=(Coord<T> n) { x -= n.x; y -= n.y; }
 		inline Coord<T> operator+(Coord<T> n) { return Coord<T>(x + n.x, y + n.y); }
+		inline Coord<T> operator-(Coord<T> n) { return Coord<T>(x - n.x, y - n.y); }
 	};
 
 	struct Zone {
@@ -28,38 +30,6 @@ namespace City {
 
 		private:
 			std::string tile;
-	};
-
-	class Building {
-		public:
-			double getTax(double tax) { return profit * tax; }
-
-		protected:
-			double profit;
-	};
-
-	class CommerceBuilding : public Building {
-		public:
-			CommerceBuilding() {}
-
-		private:
-
-	};
-
-	class IndBuilding : public Building {
-		public:
-			IndBuilding() {}
-
-		private:
-
-	};
-
-	class ResBuilding : public Building {
-		public:
-			ResBuilding() {}
-
-		private:
-
 	};
 
 	template <class T> class CityMap {
@@ -94,6 +64,36 @@ namespace City {
 			int w, h;
 
 			std::vector<std::vector<std::shared_ptr<T>>> data;
+	};
+
+	class RoadNetwork {
+		public:
+			struct Node {
+				int n, level;
+				Coord<int> pos;
+
+				std::vector<std::shared_ptr<Node>> children;
+
+				Node(Coord<int> _pos, int _n, int _level) { pos = _pos; n = _n, level = _level; }
+			};
+
+			typedef std::shared_ptr<Node> RoadNode;
+
+			RoadNetwork(Coord<int> initial_pos) : counter(0) {
+				root = std::make_shared<Node>(initial_pos, 0, 0);
+			}
+
+			RoadNode addRoad(RoadNode node, Coord<int> pos) {
+				RoadNode road = std::make_shared<Node>(pos, ++counter, node->level + 1);
+				node->children.push_back(road);
+				return road;
+			}
+
+			RoadNode getRoot() { return root; }
+
+		private:
+			int counter;
+			RoadNode root;
 	};
 }
 

@@ -19,21 +19,22 @@ class CityEngine {
 		std::shared_ptr<Net> net;
 
 		long pop;
-
-		std::map<std::string, double> sValues;
-		std::map<std::string, double> dValues;
-
-		std::shared_ptr<City::CityMap<City::Tile>> map_ground;
-		std::shared_ptr<City::CityMap<City::Building>> map_build;
+		float speed, counter;
 
 		enum MapLayers { Ground, Build, Zones };
 
+		std::shared_ptr<City::CityMap<City::Tile>> map_ground;
+		std::shared_ptr<City::CityMap<City::Tile>> map_build;
+
+		City::Coord<int> center;
+		std::shared_ptr<City::RoadNetwork> roadNetwork;
+
 		void initMaps();
 		void initValues();
-
-		float speed, counter;
-
-		void setTile(int x, int y, std::string tile);
+		
+		void expandRoads();
+		void updateRoadNetwork(City::RoadNetwork::RoadNode node, City::RoadNetwork::RoadNode prev);
+		void setTile(int x, int y, std::string tile, int layer = 1);
 
 	public:
 		

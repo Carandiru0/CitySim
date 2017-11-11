@@ -17,6 +17,7 @@ IsoEngine::IsoEngine(const SpriteHandler &_spr, std::shared_ptr<RenderWindow> _a
 	tiles["building2"]  = { sprHandler.create("building2") };
 	tiles["building3"]  = { sprHandler.create("building3") };
 	tiles["zone_res"]	= { sprHandler.create("zone_res") };
+	tiles["road_c"]		= { sprHandler.create("road_c") };
 	tiles["road_v"]		= { sprHandler.create("road_v") };
 	tiles["road_h"]		= { sprHandler.create("road_h") };
 	tiles["road_t"]		= { sprHandler.create("road_t") };
