@@ -32,9 +32,10 @@ class CityEngine {
 
 		std::shared_ptr<BuildingScanner> scanner;
 
-		int sect, roadlevel;
+		bool stopRoads;
 		long pop;
-		float speed, counter;
+		int sect, roadlevel;
+		float speed, bspeed, counter, bcounter;
 
 		enum MapLayers { Ground, Build, Zones };
 
@@ -54,6 +55,7 @@ class CityEngine {
 		void setTile(int x, int y, std::string tile, int layer = 1);
 		bool doesTileExist(int x, int y, int layer);
 
+		bool inBounds(int x, int y);
 		inline City::Coord<float> polar_to_xy(float angle, float r);
 
 	public:

@@ -10,25 +10,36 @@ CityEngine::CityEngine(EngineInterface *_renderer) : renderer(_renderer) {
 	unsigned seed = (unsigned)std::chrono::system_clock::now().time_since_epoch().count();
 	rand_gen.seed(seed);
 
-	scanner = make_shared<BuildingScanner>(rand_gen);
-	
-	net = make_shared<Net>(15817);
-	
 	dims = renderer->getDimensions();
 	center.x = dims.x / 2, center.y = dims.y / 2;
 
+	scanner		= make_shared<BuildingScanner>(rand_gen);
+	net			= make_shared<Net>(15817);
 	roadNetwork = make_shared<City::RoadNetwork>(center);
 
-	sect = 3;
-	speed = 1000.0f;
-	counter = speed;
+	sect	 = 3;
+	speed	 = 7000.0f;
+	bspeed	 = speed * 16.0f;
+	counter  = speed;
+	bcounter = speed;
 
 	initValues();
 	initMaps();
 }
 
 void CityEngine::update(float dt) {
+	counter -= dt, bcounter -= dt;
 
+	if (counter < 0.0f) {
+		newBuilding();
+		counter = speed;
+	}
+
+	if (!stopRoads && bcounter < 0.0f) {
+		expandRoads();
+		bspeed += bspeed;
+		bcounter = bspeed;
+	}
 }
 
 void CityEngine::initMaps() {
@@ -47,9 +58,6 @@ void CityEngine::initMaps() {
 	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::Coord<int>(center.x, center.y + sect)));
 
 	updateRoadNetwork(roadNetwork->getRoot());
-
-	newBuilding();
-	newBuilding();
 	newBuilding();
 }
 
@@ -90,8 +98,11 @@ void CityEngine::updateRoadNetwork(City::RoadNetwork::RoadNode node) {
 	}
 	
 	if (node->parent != nullptr) {
-		setTile(node->pos.x, node->pos.y, "road_c", 1);
-		createRoadBetween(node, node->parent);
+		if (inBounds(node->pos.x, node->pos.y)) {
+			setTile(node->pos.x, node->pos.y, "road_c", 1);
+			createRoadBetween(node, node->parent);
+		} else
+			stopRoads = true;
 	}
 
 	for (unsigned i = 0; i < node->children.size(); i++)
@@ -171,8 +182,16 @@ bool CityEngine::doesTileExist(int x, int y, int layer) {
 }
 
 void CityEngine::initValues() {
+	stopRoads = false;
 	pop = 1;
 	roadlevel = 1;
+}
+
+bool CityEngine::inBounds(int x, int y) {
+	if (x >= 0 && y >= 0 && x < dims.x && y < dims.y)
+		return true;
+
+	return false;
 }
 
 City::Coord<float> CityEngine::polar_to_xy(float angle, float r) {
