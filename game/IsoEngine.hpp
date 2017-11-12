@@ -9,6 +9,7 @@
 
 #include "SpriteHandler.hpp"
 #include "EngineInterface.hpp"
+#include "SpriteBatch.hpp"
 
 class IsoEngine : public EngineInterface {
 	public:
@@ -51,10 +52,13 @@ class IsoEngine : public EngineInterface {
 		SpriteHandler sprHandler;
 		std::shared_ptr<sf::RenderWindow> app;
 		std::map<std::string, IsoMap::TileDef> tiles;
+		
+		SpriteBatch batch;
 
 		City::Coord<int> dimensions;
 		City::Coord<float> offset;
 
+		inline bool onScreen(int x, int y);
 		inline City::Coord<float> xy_iso(City::Coord<float> xy);
 		inline City::Coord<float> iso_xy(City::Coord<float> iso);
 		inline City::Coord<float> origin(std::shared_ptr<IsoMap> map);

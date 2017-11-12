@@ -158,6 +158,7 @@
     <ClCompile Include="GuiEnv.cpp" />
     <ClCompile Include="IsoEngine.cpp" />
     <ClCompile Include="Net.cpp" />
+    <ClCompile Include="SpriteBatch.cpp" />
     <ClCompile Include="SpriteHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -167,6 +168,7 @@
     <ClInclude Include="GuiEnv.hpp" />
     <ClInclude Include="IsoEngine.hpp" />
     <ClInclude Include="Net.hpp" />
+    <ClInclude Include="SpriteBatch.hpp" />
     <ClInclude Include="SpriteHandler.hpp" />
     <ClInclude Include="Vec3D.h" />
   </ItemGroup>

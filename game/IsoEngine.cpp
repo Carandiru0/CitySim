@@ -10,6 +10,7 @@ IsoEngine::IsoEngine(const SpriteHandler &_spr, std::shared_ptr<RenderWindow> _a
 	: sprHandler(_spr), dimensions(53, 53)
 {
 	app = _app;
+	batch.setRenderTarget(*app);
 
 	tiles["grass"]		= { sprHandler.create("grass") };
 	tiles["pavement"]	= { sprHandler.create("pavement") };
@@ -28,10 +29,6 @@ IsoEngine::IsoEngine(const SpriteHandler &_spr, std::shared_ptr<RenderWindow> _a
 	map_layers.push_back(make_shared<IsoMap>(dimensions.x, dimensions.y, false));
 
 	offset = origin(map_layers[Ground]);
-
-	//for (int y = 0; y < map_layers[Ground]->getH(); y++)
-	//	for (int x = 0; x < map_layers[Ground]->getW(); x++)
-	//		setTile(Coord<int>(x, y), "grass");
 }
 
 void IsoEngine::render() {
@@ -42,13 +39,19 @@ void IsoEngine::render() {
 					shared_ptr<IsoMap::Tile> tile = map_layers[z]->data[y][x];
 
 					if (tile != nullptr) {
-						tiles[tile->tile].spr.setPosition(tile->iso.x + offset.x, tile->iso.y + offset.y);
-						app->draw(tiles[tile->tile].spr);
+						int sx = tile->iso.x + offset.x, sy = tile->iso.y + offset.y;
+
+						if (onScreen(sx, sy)) {
+							tiles[tile->tile].spr.setPosition(sx, sy);
+							batch.draw(tiles[tile->tile].spr);
+						}
 					}
 				}
 			}
 		}
 	}
+
+	batch.display();
 }
 
 void IsoEngine::setTile(Coord<int> position, string tile, int layer) {
@@ -58,6 +61,13 @@ void IsoEngine::setTile(Coord<int> position, string tile, int layer) {
 	t.tile = tile;
 
 	map_layers[layer]->data[position.y][position.x] = make_shared<IsoMap::Tile>(t);
+}
+
+inline bool IsoEngine::onScreen(int x, int y) {
+	if (x >= 0 && y >= 0 && x < 1024 + 64 && y < 768 + 32)
+		return true;
+
+	return false;
 }
 
 inline Coord<float> IsoEngine::xy_iso(Coord<float> c) {

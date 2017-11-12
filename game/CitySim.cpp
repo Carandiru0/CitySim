@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
 	std::string sessid = argv[1];*/
 
 	std::shared_ptr<RenderWindow> app = std::make_shared<RenderWindow>(VideoMode(1024, 768), "2D City Sim");
-	app->setVerticalSyncEnabled(true);
+	//app->setVerticalSyncEnabled(true);
 
 	SpriteHandler spr;
 	IsoEngine    *iso = new IsoEngine(spr, app);
@@ -38,6 +38,15 @@ int main(int argc, char *argv[]) {
 	std::thread network(thread_network, app, net, engine);
 
 	Clock timer;
+
+	Font font;
+	font.loadFromFile("data/fonts/arial.ttf");
+
+	Text txt_fps("Fps: 0", font, 30U);
+	txt_fps.setPosition(10, 10);
+
+	int frames = 0;
+	float fps_timer = 1.0f;
 
 	while (app->isOpen()) {
 		Event e;
@@ -51,12 +60,25 @@ int main(int argc, char *argv[]) {
 			gui.events(e);
 		}
 		
-		engine.update((float)timer.getElapsedTime().asMilliseconds());
+		float dt = timer.restart().asSeconds();
+		
+		fps_timer -= dt;
+		++frames;
+		
+		if (fps_timer < 0.0f) {
+			txt_fps.setString("Fps: " + std::to_string(frames));
+			frames = 0;
+			fps_timer = 1.0f;
+		}
+		
+		engine.update(dt);
 
 		app->clear(Color(119, 181, 254));
 		
 		iso->render();
 		gui.render(0);
+
+		app->draw(txt_fps);
 
 		app->display();
 	}

@@ -18,10 +18,10 @@ CityEngine::CityEngine(EngineInterface *_renderer) : renderer(_renderer) {
 	roadNetwork = make_shared<City::RoadNetwork>(center);
 
 	sect	 = 3;
-	speed	 = 7000.0f;
+	speed	 = 10.0f;
 	bspeed	 = speed * 16.0f;
 	counter  = speed;
-	bcounter = speed;
+	bcounter = bspeed;
 
 	initValues();
 	initMaps();
@@ -134,7 +134,7 @@ void CityEngine::newBuilding() {
 		}
 	}
 	
-	if(found)
+	if(found && inBounds(xy.x, xy.y))
 		setTile(xy.x, xy.y, "building1", 1);
 }
 
@@ -170,12 +170,15 @@ void CityEngine::setTile(int x, int y, string tile, int layer) {
 }
 
 bool CityEngine::doesTileExist(int x, int y, int layer) {
-	if (layer == 0) {
-		if (map_ground->get(x, y) != nullptr)
-			return true;
-	} else {
-		if (map_build->get(x, y) != nullptr)
-			return true;
+	if (inBounds(x, y)) {
+		if (layer == 0) {
+			if (map_ground->get(x, y) != nullptr)
+				return true;
+		}
+		else {
+			if (map_build->get(x, y) != nullptr)
+				return true;
+		}
 	}
 
 	return false;
