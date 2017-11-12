@@ -66,15 +66,15 @@ class Vec3D {
 		inline Vec3D operator/(T k) { return Vec3D(x / k, y / k, z / k); }
 		inline Vec3D operator/(Vec3D v) { return Vec3D(x / v.getX(), y / v.getY(), z / v.getZ()); }
 
-		inline float magnitude() { return sqrtf(x * x + y * y + z * z); }
+		inline float magnitude() { return sqrtf((float)(x * x + y * y + z * z)); }
 
-		inline Vec3D normalised() {
+		inline Vec3D<float> normalised() {
 			float m = magnitude();
 
 			if (m == 0.f)
-				return Vec3D();
+				return Vec3D<float>();
 
-			return Vec3D(x / m, y / m, z / m);
+			return Vec3D<float>((float)x / m, (float)y / m, (float)z / m);
 		}
 
 		inline float distance(Vec3D v) {

@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <map>
+#include <random>
 
 #include "Net.hpp"
 #include "EngineInterface.hpp"
@@ -17,8 +18,21 @@ class CityEngine {
 	private:
 		EngineInterface *renderer;
 		std::shared_ptr<Net> net;
+		std::mt19937 rand_gen;
 
-		int sect;
+		class BuildingScanner {
+			public:
+				BuildingScanner(std::mt19937 &gen) : rand_gen(gen), dist_angle(0, 360) {}
+				int getAngle() { return dist_angle(rand_gen); }
+
+			private:
+				std::mt19937 rand_gen;
+				std::uniform_int_distribution<> dist_angle;
+		};
+
+		std::shared_ptr<BuildingScanner> scanner;
+
+		int sect, roadlevel;
 		long pop;
 		float speed, counter;
 
@@ -40,7 +54,10 @@ class CityEngine {
 		void setTile(int x, int y, std::string tile, int layer = 1);
 		bool doesTileExist(int x, int y, int layer);
 
+		inline City::Coord<float> polar_to_xy(float angle, float r);
+
 	public:
+		void newBuilding();
 		void expandRoads();
 		void updateRoadNetwork(City::RoadNetwork::RoadNode node);
 

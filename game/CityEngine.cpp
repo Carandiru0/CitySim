@@ -2,10 +2,16 @@
 #include "Vec3D.h"
 
 #include <iostream>
+#include <chrono>
 
 using namespace std;
 
 CityEngine::CityEngine(EngineInterface *_renderer) : renderer(_renderer) {
+	unsigned seed = (unsigned)std::chrono::system_clock::now().time_since_epoch().count();
+	rand_gen.seed(seed);
+
+	scanner = make_shared<BuildingScanner>(rand_gen);
+	
 	net = make_shared<Net>(15817);
 	
 	dims = renderer->getDimensions();
@@ -22,7 +28,7 @@ CityEngine::CityEngine(EngineInterface *_renderer) : renderer(_renderer) {
 }
 
 void CityEngine::update(float dt) {
-	
+
 }
 
 void CityEngine::initMaps() {
@@ -41,6 +47,10 @@ void CityEngine::initMaps() {
 	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::Coord<int>(center.x, center.y + sect)));
 
 	updateRoadNetwork(roadNetwork->getRoot());
+
+	newBuilding();
+	newBuilding();
+	newBuilding();
 }
 
 void CityEngine::expandRoads() {
@@ -49,11 +59,11 @@ void CityEngine::expandRoads() {
 
 	for (auto road : tpRoads) {
 		Vec3D<int> dir(road->pos.x - road->parent->pos.x, 0, road->pos.y - road->parent->pos.y);
-		auto adj = dir.cross(Vec3D<int>(0, 1, 0)).normalised() * sect;
-		auto lne = dir.normalised() * sect;
+		auto adj = dir.cross(Vec3D<int>(0, 1, 0)).normalised() * (float)sect;
+		auto lne = dir.normalised() * (float)sect;
 
-		auto pos0 = road->pos + City::Coord<int>(lne.getX(), lne.getZ());
-		auto pos1 = road->pos + City::Coord<int>(adj.getX(), adj.getZ());
+		auto pos0 = road->pos + City::Coord<int>((int)lne.getX(), (int)lne.getZ());
+		auto pos1 = road->pos + City::Coord<int>((int)adj.getX(), (int)adj.getZ());
 
 		City::RoadNetwork::RoadNode n0 = roadNetwork->addRoad(road, pos0);
 		City::RoadNetwork::RoadNode n1 = roadNetwork->addRoad(road, pos1);
@@ -64,6 +74,8 @@ void CityEngine::expandRoads() {
 
 	for(auto road : topRoads)
 		updateRoadNetwork(road);
+
+	roadlevel++;
 }
 
 void CityEngine::updateRoadNetwork(City::RoadNetwork::RoadNode node) {
@@ -86,9 +98,38 @@ void CityEngine::updateRoadNetwork(City::RoadNetwork::RoadNode node) {
 		updateRoadNetwork(node->children[i]);
 }
 
+void CityEngine::newBuilding() {
+	int attempts = 0, maxattempts = 100;
+	City::Coord<int> xy;
+	bool found = false;
+
+	std::uniform_int_distribution<> dist_radius(0, (float)roadlevel * sect);
+
+	while (attempts < maxattempts) {
+		float search_radius = dist_radius(rand_gen);
+		float angle = (float)scanner->getAngle();
+		
+		City::Coord<float> c = polar_to_xy(angle * ((float)M_PI / 180.0f), search_radius);
+		xy.x = (int)c.x;
+		xy.y = (int)c.y;
+
+		xy += center;
+
+		if (doesTileExist(xy.x, xy.y, 1))
+			++attempts;
+		else {
+			found = true;
+			break;
+		}
+	}
+	
+	if(found)
+		setTile(xy.x, xy.y, "building1", 1);
+}
+
 void CityEngine::createRoadBetween(City::RoadNetwork::RoadNode n1, City::RoadNetwork::RoadNode n2) {
 	auto diff = n2->pos - n1->pos;
-	int dist = sqrt(diff.x * diff.x + diff.y * diff.y);
+	int dist = (int)sqrt(diff.x * diff.x + diff.y * diff.y);
 	bool vert;
 	int dir;
 
@@ -131,4 +172,9 @@ bool CityEngine::doesTileExist(int x, int y, int layer) {
 
 void CityEngine::initValues() {
 	pop = 1;
+	roadlevel = 1;
+}
+
+City::Coord<float> CityEngine::polar_to_xy(float angle, float r) {
+	return City::Coord<float>(r * cosf(angle), r * sinf(angle));
 }

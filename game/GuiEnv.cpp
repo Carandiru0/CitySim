@@ -32,9 +32,8 @@ void Gui::events(Event &e) {
 		}
 	} else if (e.type == Event::KeyReleased) {
 		switch (e.key.code) {
-			case Keyboard::E:
-				engine.expandRoads();
-				break;
+			case Keyboard::E: engine.expandRoads(); break;
+			case Keyboard::B: engine.newBuilding(); break;
 		}
 	}
 }
