@@ -33,7 +33,7 @@ class CityEngine {
 		std::shared_ptr<BuildingScanner> scanner;
 
 		bool stopRoads;
-		long pop;
+		std::shared_ptr<long> pop;
 		int sect, roadlevel;
 		float speed, bspeed, counter, bcounter;
 
@@ -62,6 +62,8 @@ class CityEngine {
 		void newBuilding();
 		void expandRoads();
 		void updateRoadNetwork(City::RoadNetwork::RoadNode node);
+
+		std::map<std::string, std::shared_ptr<long>> getValues();
 
 	private:
 		

@@ -37,6 +37,12 @@ class Gui {
 				sf::Sprite spr, spr_hover;
 		};
 
+		sf::Font font;
+		sf::Text hudTxt;
+
+		void attachValues();
+		std::map<std::string, std::shared_ptr<long>> hudValues;
+
 	public:
 		Gui(const SpriteHandler &sprHandler, std::shared_ptr<sf::RenderWindow> app, const CityEngine &engine);
 

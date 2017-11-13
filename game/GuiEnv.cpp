@@ -9,12 +9,28 @@ Gui::Gui(const SpriteHandler &spr, shared_ptr<RenderWindow> _app, const CityEngi
 	: engine(_engine), sprHandler(spr)
 {
 	app = _app;
+	attachValues();
 	//elements.push_back(createElement("btn_zone", City::Coord<float>(42, 620), &Gui::action_btn_zone));
+
+	font.loadFromFile("data/fonts/arial.ttf");
+	
+	hudTxt.setFont(font);
+	hudTxt.setCharacterSize(28U);
+	hudTxt.setFillColor(sf::Color::White);
 }
 
 void Gui::render(float dt) {
 	for (unsigned i = 0; i < elements.size(); i++)
 		elements[i]->render(app);
+
+	int i = 0;
+
+	for (auto &el : hudValues) {
+		hudTxt.setString(el.first + ": " + to_string(*el.second));
+		hudTxt.setPosition(10.f, 50.f + (float)i * 40.f);
+		app->draw(hudTxt);
+		++i;
+	}
 }
 
 void Gui::events(Event &e) {
@@ -36,6 +52,10 @@ void Gui::events(Event &e) {
 			case Keyboard::B: engine.newBuilding(); break;
 		}
 	}
+}
+
+void Gui::attachValues() {
+	hudValues = engine.getValues();
 }
 
 shared_ptr<Gui::GuiElement> Gui::createElement(string name, City::Coord<float> pos, Action action) {

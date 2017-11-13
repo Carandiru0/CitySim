@@ -18,10 +18,11 @@ CityEngine::CityEngine(EngineInterface *_renderer) : renderer(_renderer) {
 	roadNetwork = make_shared<City::RoadNetwork>(center);
 
 	sect	 = 3;
-	speed	 = 10.0f;
+	speed	 = 2.0f;
 	bspeed	 = speed * 16.0f;
 	counter  = speed;
 	bcounter = bspeed;
+	stopRoads = false;
 
 	initValues();
 	initMaps();
@@ -109,15 +110,23 @@ void CityEngine::updateRoadNetwork(City::RoadNetwork::RoadNode node) {
 		updateRoadNetwork(node->children[i]);
 }
 
+map<std::string, shared_ptr<long>> CityEngine::getValues() {
+	map<std::string, shared_ptr<long>> vals;
+
+	vals["Pop"] = pop;
+
+	return vals;
+}
+
 void CityEngine::newBuilding() {
 	int attempts = 0, maxattempts = 100;
 	City::Coord<int> xy;
 	bool found = false;
 
-	std::uniform_int_distribution<> dist_radius(0, (float)roadlevel * sect);
+	std::uniform_int_distribution<> dist_radius(0, roadlevel * sect);
 
 	while (attempts < maxattempts) {
-		float search_radius = dist_radius(rand_gen);
+		float search_radius = (float)dist_radius(rand_gen);
 		float angle = (float)scanner->getAngle();
 		
 		City::Coord<float> c = polar_to_xy(angle * ((float)M_PI / 180.0f), search_radius);
@@ -134,8 +143,10 @@ void CityEngine::newBuilding() {
 		}
 	}
 	
-	if(found && inBounds(xy.x, xy.y))
+	if (found && inBounds(xy.x, xy.y)) {
 		setTile(xy.x, xy.y, "building1", 1);
+		*pop += 4;
+	}
 }
 
 void CityEngine::createRoadBetween(City::RoadNetwork::RoadNode n1, City::RoadNetwork::RoadNode n2) {
@@ -185,8 +196,7 @@ bool CityEngine::doesTileExist(int x, int y, int layer) {
 }
 
 void CityEngine::initValues() {
-	stopRoads = false;
-	pop = 1;
+	pop = make_shared<long>(0);
 	roadlevel = 1;
 }
 
