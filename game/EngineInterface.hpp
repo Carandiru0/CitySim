@@ -66,54 +66,6 @@ namespace City {
 			std::vector<std::vector<std::shared_ptr<T>>> data;
 	};
 
-	class RoadNetwork {
-		public:
-			struct Node {
-				int n, level;
-				Coord<int> pos;
-
-				std::shared_ptr<Node> parent;
-				std::vector<std::shared_ptr<Node>> children;
-
-				Node(std::shared_ptr<Node> _parent, Coord<int> _pos, int _n, int _level) {
-					pos = _pos; n = _n, level = _level, parent = _parent;
-				}
-			};
-
-			typedef std::shared_ptr<Node> RoadNode;
-
-			RoadNetwork(Coord<int> initial_pos) : counter(0) {
-				root = std::make_shared<Node>(nullptr, initial_pos, 0, 0);
-			}
-
-			RoadNode addRoad(RoadNode node, Coord<int> pos) {
-				RoadNode road = std::make_shared<Node>(node, pos, ++counter, node->level + 1);
-				node->children.push_back(road);
-				return road;
-			}
-
-			RoadNode searchPosition(RoadNode node, Coord<int> pos) {
-				if (node->pos.x == pos.x && node->pos.y == pos.y)
-					return node;
-				else {
-					for (auto child : node->children) {
-						RoadNode found;
-
-						if ((found = searchPosition(child, pos)) != nullptr)
-							return found;
-					}
-				}
-
-				return nullptr;
-			}
-
-			RoadNode getRoot() { return root; }
-
-		private:
-			int counter;
-			RoadNode root;
-	};
-
 	class Building {
 		public:
 			Building() {}

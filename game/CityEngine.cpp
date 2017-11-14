@@ -67,20 +67,22 @@ void CityEngine::expandRoads() {
 	topRoads.clear();
 
 	for (auto road : tpRoads) {
-		Vec3D<int> dir(road->pos.x - road->parent->pos.x, 0, road->pos.y - road->parent->pos.y);
+		City::RoadNode parent = static_pointer_cast <City::RoadNetworkNode>(road->parent);
+		
+		Vec3D<int> dir(road->pos.x - parent->pos.x, 0, road->pos.y - parent->pos.y);
 		auto adj = dir.cross(Vec3D<int>(0, 1, 0)).normalised() * (float)sect;
 		auto lne = dir.normalised() * (float)sect;
 
 		auto pos0 = road->pos + City::Coord<int>((int)lne.getX(), (int)lne.getZ());
 		auto pos1 = road->pos + City::Coord<int>((int)adj.getX(), (int)adj.getZ());
 
-		City::RoadNetwork::RoadNode eNode = roadNetwork->searchPosition(roadNetwork->getRoot(), pos1);
-		City::RoadNetwork::RoadNode n0 = roadNetwork->addRoad(road, pos0);
+		City::RoadNode eNode = roadNetwork->searchPosition(roadNetwork->getRoot(), pos1);
+		City::RoadNode n0 = roadNetwork->addRoad(road, pos0);
 
 		topRoads.push_back(n0);
 
 		if (eNode == nullptr || (eNode != nullptr && (eNode->level == road->level - 1) || (eNode->level == road->level + 1))) {
-			City::RoadNetwork::RoadNode n1 = roadNetwork->addRoad(road, pos1);
+			City::RoadNode n1 = roadNetwork->addRoad(road, pos1);
 			topRoads.push_back(n1);
 		}
 	}
@@ -91,8 +93,10 @@ void CityEngine::expandRoads() {
 	roadlevel++;
 }
 
-void CityEngine::updateRoadNetwork(City::RoadNetwork::RoadNode node) {
+void CityEngine::updateRoadNetwork(City::RoadNode node) {
 	unsigned children = node->children.size();
+	City::RoadNode parent = static_pointer_cast<City::RoadNetworkNode>(node->parent);
+	
 	//cout << node->n << ": lvl " << node->level << " (" << children << " children)\n";
 
 	if (node->parent == nullptr) {
@@ -105,13 +109,13 @@ void CityEngine::updateRoadNetwork(City::RoadNetwork::RoadNode node) {
 	if (node->parent != nullptr) {
 		if (inBounds(node->pos.x, node->pos.y)) {
 			setTile(node->pos.x, node->pos.y, "road_c", 1);
-			createRoadBetween(node, node->parent);
+			createRoadBetween(node, parent);
 		} else
 			stopRoads = true;
 	}
 
 	for (unsigned i = 0; i < node->children.size(); i++)
-		updateRoadNetwork(node->children[i]);
+		updateRoadNetwork(dynamic_pointer_cast<City::RoadNetworkNode>(node->children[i]));
 }
 
 map<std::string, shared_ptr<long>> CityEngine::getValues() {
@@ -153,7 +157,7 @@ void CityEngine::newBuilding() {
 	}
 }
 
-void CityEngine::createRoadBetween(City::RoadNetwork::RoadNode n1, City::RoadNetwork::RoadNode n2) {
+void CityEngine::createRoadBetween(City::RoadNode n1, City::RoadNode n2) {
 	auto diff = n2->pos - n1->pos;
 	int dist = (int)sqrt(diff.x * diff.x + diff.y * diff.y);
 	bool vert;

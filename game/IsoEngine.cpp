@@ -41,7 +41,7 @@ void IsoEngine::render() {
 					if (tile != nullptr) {
 						float sx = tile->iso.x + offset.x, sy = tile->iso.y + offset.y;
 
-						if (onScreen(sx, sy)) {
+						if (onScreen((int)sx, (int)sy)) {
 							tiles[tile->tile].spr.setPosition(sx, sy);
 							batch.draw(tiles[tile->tile].spr);
 						}

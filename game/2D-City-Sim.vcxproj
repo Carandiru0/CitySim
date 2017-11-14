@@ -160,6 +160,7 @@
     <ClCompile Include="Net.cpp" />
     <ClCompile Include="SpriteBatch.cpp" />
     <ClCompile Include="SpriteHandler.cpp" />
+    <ClCompile Include="Tree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimatedSprite.hpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="Net.hpp" />
     <ClInclude Include="SpriteBatch.hpp" />
     <ClInclude Include="SpriteHandler.hpp" />
+    <ClInclude Include="Tree.hpp" />
     <ClInclude Include="Vec3D.h" />
   </ItemGroup>
   <ItemGroup>

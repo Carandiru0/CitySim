@@ -8,6 +8,7 @@
 
 #include "Net.hpp"
 #include "EngineInterface.hpp"
+#include "Tree.hpp"
 
 class CityEngine {
 	public:
@@ -46,12 +47,12 @@ class CityEngine {
 
 		std::map<int, City::Building> buildings;
 		std::shared_ptr<City::RoadNetwork> roadNetwork;
-		std::vector<City::RoadNetwork::RoadNode> topRoads;
+		std::vector<City::RoadNode> topRoads;
 
 		void initMaps();
 		void initValues();
 		
-		void createRoadBetween(City::RoadNetwork::RoadNode n1, City::RoadNetwork::RoadNode n2);
+		void createRoadBetween(City::RoadNode n1, City::RoadNode n2);
 		void setTile(int x, int y, std::string tile, int layer = 1);
 		bool doesTileExist(int x, int y, int layer);
 
@@ -61,7 +62,7 @@ class CityEngine {
 	public:
 		void newBuilding();
 		void expandRoads();
-		void updateRoadNetwork(City::RoadNetwork::RoadNode node);
+		void updateRoadNetwork(City::RoadNode node);
 
 		std::map<std::string, std::shared_ptr<long>> getValues();
 
