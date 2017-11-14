@@ -1,7 +1,7 @@
 #include "SpriteBatch.hpp"
 #include <math.h>
 
-const float Pi = 3.14159265;
+const float Pi = 3.14159265f;
 const int MaxCapacity = 400000;
 const int LookupSize = 512;
 
@@ -80,8 +80,8 @@ void SpriteBatch::draw(const Texture *texture, Vector2f position, IntRect rec, C
 	pY = -origin.y;
 	v.position.x = pX * _cos - pY * _sin + position.x;
 	v.position.y = pX * _sin + pY * _cos + position.y;
-	v.texCoords.x = rec.left;
-	v.texCoords.y = rec.top;
+	v.texCoords.x = (float)rec.left;
+	v.texCoords.y = (float)rec.top;
 	vertices[count * 4 + 0] = v;
 
 	pX += scale.x;

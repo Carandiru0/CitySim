@@ -39,7 +39,7 @@ void IsoEngine::render() {
 					shared_ptr<IsoMap::Tile> tile = map_layers[z]->data[y][x];
 
 					if (tile != nullptr) {
-						int sx = tile->iso.x + offset.x, sy = tile->iso.y + offset.y;
+						float sx = tile->iso.x + offset.x, sy = tile->iso.y + offset.y;
 
 						if (onScreen(sx, sy)) {
 							tiles[tile->tile].spr.setPosition(sx, sy);

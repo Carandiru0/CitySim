@@ -92,6 +92,21 @@ namespace City {
 				return road;
 			}
 
+			RoadNode searchPosition(RoadNode node, Coord<int> pos) {
+				if (node->pos.x == pos.x && node->pos.y == pos.y)
+					return node;
+				else {
+					for (auto child : node->children) {
+						RoadNode found;
+
+						if ((found = searchPosition(child, pos)) != nullptr)
+							return found;
+					}
+				}
+
+				return nullptr;
+			}
+
 			RoadNode getRoot() { return root; }
 
 		private:

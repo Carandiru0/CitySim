@@ -18,7 +18,7 @@ CityEngine::CityEngine(EngineInterface *_renderer) : renderer(_renderer) {
 	roadNetwork = make_shared<City::RoadNetwork>(center);
 
 	sect	 = 3;
-	speed	 = 2.0f;
+	speed	 = 1.0f;
 	bspeed	 = speed * 16.0f;
 	counter  = speed;
 	bcounter = bspeed;
@@ -37,9 +37,9 @@ void CityEngine::update(float dt) {
 	}
 
 	if (!stopRoads && bcounter < 0.0f) {
-		expandRoads();
-		bspeed += bspeed;
-		bcounter = bspeed;
+		//expandRoads();
+		//bspeed += bspeed;
+		//bcounter = bspeed;
 	}
 }
 
@@ -74,11 +74,15 @@ void CityEngine::expandRoads() {
 		auto pos0 = road->pos + City::Coord<int>((int)lne.getX(), (int)lne.getZ());
 		auto pos1 = road->pos + City::Coord<int>((int)adj.getX(), (int)adj.getZ());
 
+		City::RoadNetwork::RoadNode eNode = roadNetwork->searchPosition(roadNetwork->getRoot(), pos1);
 		City::RoadNetwork::RoadNode n0 = roadNetwork->addRoad(road, pos0);
-		City::RoadNetwork::RoadNode n1 = roadNetwork->addRoad(road, pos1);
-		
+
 		topRoads.push_back(n0);
-		topRoads.push_back(n1);
+
+		if (eNode == nullptr || (eNode != nullptr && (eNode->level == road->level - 1) || (eNode->level == road->level + 1))) {
+			City::RoadNetwork::RoadNode n1 = roadNetwork->addRoad(road, pos1);
+			topRoads.push_back(n1);
+		}
 	}
 
 	for(auto road : topRoads)
@@ -89,7 +93,7 @@ void CityEngine::expandRoads() {
 
 void CityEngine::updateRoadNetwork(City::RoadNetwork::RoadNode node) {
 	unsigned children = node->children.size();
-	cout << node->n << ": lvl " << node->level << " (" << children << " children)\n";
+	//cout << node->n << ": lvl " << node->level << " (" << children << " children)\n";
 
 	if (node->parent == nullptr) {
 		if(children > 0)
