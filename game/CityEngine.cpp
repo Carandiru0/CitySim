@@ -59,10 +59,6 @@ void CityEngine::initMaps() {
 	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::Coord<int>(center.x, center.y + sect)));
 
 	expandRoads();
-	expandRoads();
-	expandRoads();
-
-	roadNetwork->breadthFirstSearch(topRoads[1], topRoads[10]);
 
 	updateRoadNetwork(roadNetwork->getRoot());
 	newBuilding();
@@ -137,6 +133,24 @@ void CityEngine::clickTile(int x, int y) {
 	City::Coord<int> coord = renderer->getIsoFromMouseXY(x, y);
 	
 	cout << coord.x << " " << coord.y << "\n";
+
+	auto node = roadNetwork->searchPosition(roadNetwork->getRoot(), coord);
+	
+	if(node != nullptr)
+		nodesToFind.push_back(node);
+
+	if (nodesToFind.size() >= 2) {
+		auto path = roadNetwork->breadthFirstSearch(nodesToFind[0], nodesToFind[1]);
+		nodesToFind.clear();
+
+		vector<City::Coord<int>> vertices;
+
+		for (auto n : path)
+			vertices.push_back(n->pos);
+
+		if (!path.empty())
+			renderer->drawPath(vertices);
+	}
 }
 
 map<std::string, shared_ptr<long>> CityEngine::getValues() {

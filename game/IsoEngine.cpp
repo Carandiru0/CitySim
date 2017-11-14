@@ -7,7 +7,7 @@ using namespace std;
 using namespace City;
 
 IsoEngine::IsoEngine(const SpriteHandler &_spr, std::shared_ptr<RenderWindow> _app)
-	: sprHandler(_spr), dimensions(13, 13)
+	: sprHandler(_spr), dimensions(53, 53)
 {
 	app = _app;
 	batch.setRenderTarget(*app);
@@ -60,6 +60,9 @@ void IsoEngine::render() {
 
 	batch.draw(hoverTile);
 	batch.display();
+	
+	for (auto l : path)
+		app->draw(l);
 }
 
 City::Coord<int> IsoEngine::getIsoFromMouseXY(int mx, int my) {
@@ -76,6 +79,20 @@ City::Coord<int> IsoEngine::getIsoFromMouseXY(int mx, int my) {
 	y = (y >= dimensions.y) ? dimensions.y - 1 : y;
 
 	return City::Coord<int>(x, y);
+}
+
+void IsoEngine::drawPath(std::vector<City::Coord<int>> vertices) {
+	City::Coord<int> last = vertices[0];
+	path.clear();
+
+	for (auto v : vertices) {
+		auto v0 = xy_iso(City::Coord<float>(last.x, last.y)) + offset;
+		auto v1 = xy_iso(City::Coord<float>(v.x, v.y)) + offset;
+
+		path.push_back(sfLine(Vector2f(v0.x, v0.y), Vector2f(v1.x, v1.y)));
+
+		last = v;
+	}
 }
 
 void IsoEngine::setTile(Coord<int> position, string tile, int layer) {

@@ -1,4 +1,5 @@
 #include "SpriteBatch.hpp"
+
 #include <math.h>
 
 const float Pi = 3.14159265f;

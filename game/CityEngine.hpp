@@ -48,6 +48,7 @@ class CityEngine {
 		std::map<int, City::Building> buildings;
 		std::shared_ptr<City::RoadNetwork> roadNetwork;
 		std::vector<City::RoadNode> topRoads;
+		std::vector<City::RoadNode> nodesToFind;
 
 		void initMaps();
 		void initValues();
