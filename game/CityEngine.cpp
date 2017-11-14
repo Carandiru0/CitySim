@@ -83,16 +83,20 @@ void CityEngine::expandRoads() {
 		auto pos1 = road->pos + City::Coord<int>((int)adj.getX(), (int)adj.getZ());
 
 		City::RoadNode eNode = roadNetwork->searchPosition(roadNetwork->getRoot(), pos1);
-		City::RoadNode n0 = roadNetwork->addRoad(road, pos0);
-
-		topRoads.push_back(n0);
+		
+		if (inBounds(pos0.x, pos0.y)) {
+			City::RoadNode n0 = roadNetwork->addRoad(road, pos0);
+			topRoads.push_back(n0);
+		}
 
 		if (eNode == nullptr || (eNode != nullptr && (eNode->level == road->level - 1) || (eNode->level == road->level + 1))) {
-			City::RoadNode n1 = roadNetwork->addRoad(road, pos1);
-			topRoads.push_back(n1);
+			if (inBounds(pos1.x, pos1.y)) {
+				City::RoadNode n1 = roadNetwork->addRoad(road, pos1);
+				topRoads.push_back(n1);
 
-			if(eNode != nullptr)
-				roadNetwork->addNode(eNode, n1);
+				if (eNode != nullptr)
+					roadNetwork->addNode(eNode, n1);
+			}
 		}
 	}
 
@@ -109,10 +113,12 @@ void CityEngine::updateRoadNetwork(City::RoadNode node) {
 	//cout << node->n << ": lvl " << node->level << " (" << children << " children)\n";
 
 	if (node->parent == nullptr) {
-		if(children > 0)
-			setTile(node->pos.x, node->pos.y, "road_c", 1);
-		else
-			setTile(node->pos.x, node->pos.y, "pavement", 1);
+		if (inBounds(node->pos.x, node->pos.y)) {
+			if (children > 0)
+				setTile(node->pos.x, node->pos.y, "road_c", 1);
+			else
+				setTile(node->pos.x, node->pos.y, "pavement", 1);
+		}
 	}
 	
 	if (node->parent != nullptr) {
@@ -128,7 +134,9 @@ void CityEngine::updateRoadNetwork(City::RoadNode node) {
 }
 
 void CityEngine::clickTile(int x, int y) {
-	cout << x << ", " << y << endl;
+	City::Coord<int> coord = renderer->getIsoFromMouseXY(x, y);
+	
+	cout << coord.x << " " << coord.y << "\n";
 }
 
 map<std::string, shared_ptr<long>> CityEngine::getValues() {
