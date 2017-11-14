@@ -31,7 +31,6 @@ std::list<RoadNode> City::RoadNetwork::breadthFirstSearch(RoadNode start, RoadNo
 	std::list<RoadNode> path;
 	std::vector<RoadNode> open;
 	std::set<RoadNode> closed;
-
 	std::map<RoadNode, RoadNode> data;
 
 	open.push_back(start);

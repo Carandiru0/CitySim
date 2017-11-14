@@ -63,6 +63,7 @@ class CityEngine {
 		void newBuilding();
 		void expandRoads();
 		void updateRoadNetwork(City::RoadNode node);
+		void clickTile(int x, int y);
 
 		std::map<std::string, std::shared_ptr<long>> getValues();
 

@@ -7,7 +7,7 @@ using namespace std;
 using namespace City;
 
 IsoEngine::IsoEngine(const SpriteHandler &_spr, std::shared_ptr<RenderWindow> _app)
-	: sprHandler(_spr), dimensions(53, 53)
+	: sprHandler(_spr), dimensions(13, 13)
 {
 	app = _app;
 	batch.setRenderTarget(*app);
@@ -29,9 +29,16 @@ IsoEngine::IsoEngine(const SpriteHandler &_spr, std::shared_ptr<RenderWindow> _a
 	map_layers.push_back(make_shared<IsoMap>(dimensions.x, dimensions.y, false));
 
 	offset = origin(map_layers[Ground]);
+
+	hoverTile = sprHandler.create("zone_res");
 }
 
 void IsoEngine::render() {
+	City::Coord<int> coord = getIsoFromMouseXY(Mouse::getPosition(*app).x, Mouse::getPosition(*app).y);
+
+	auto pos = map_layers[Ground]->data[coord.y][coord.x]->iso;
+	hoverTile.setPosition(pos.x + offset.x, pos.y + offset.y);
+
 	for (int y = 0; y < map_layers[Ground]->getH(); y++) {
 		for (int x = 0; x < map_layers[Ground]->getW(); x++) {
 			for (unsigned z = 0; z < map_layers.size(); z++) {
@@ -51,7 +58,24 @@ void IsoEngine::render() {
 		}
 	}
 
+	batch.draw(hoverTile);
 	batch.display();
+}
+
+City::Coord<int> IsoEngine::getIsoFromMouseXY(int mx, int my) {
+	auto hoverPos = City::Coord<float>((float)mx, (float)my);
+	hoverPos.x -= offset.x - 0;
+	hoverPos.y -= offset.y - 16.f;
+	hoverPos = iso_xy(hoverPos);
+
+	int x = (int)hoverPos.x, y = (int)hoverPos.y;
+
+	x = (x < 0) ? 0 : x;
+	y = (y < 0) ? 0 : y;
+	x = (x >= dimensions.x) ? dimensions.x - 1 : x;
+	y = (y >= dimensions.y) ? dimensions.y - 1 : y;
+
+	return City::Coord<int>(x, y);
 }
 
 void IsoEngine::setTile(Coord<int> position, string tile, int layer) {
@@ -75,7 +99,7 @@ inline Coord<float> IsoEngine::xy_iso(Coord<float> c) {
 }
 
 inline Coord<float> IsoEngine::iso_xy(Coord<float> iso) {
-	return Coord<float>(iso.x / 16.f + iso.y / 32.f, iso.y / 16.f - iso.x / 32.f);
+	return Coord<float>((iso.x / 32.f + iso.y / 16.f) / 2.f, (iso.y / 16.f - iso.x / 32.f) / 2.f);
 }
 
 inline Coord<float> IsoEngine::origin(std::shared_ptr<IsoMap> map) {

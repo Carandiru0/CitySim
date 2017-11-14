@@ -60,8 +60,9 @@ void CityEngine::initMaps() {
 
 	expandRoads();
 	expandRoads();
+	expandRoads();
 
-	roadNetwork->breadthFirstSearch(roadNetwork->getRoot(), topRoads[1]);
+	roadNetwork->breadthFirstSearch(topRoads[1], topRoads[10]);
 
 	updateRoadNetwork(roadNetwork->getRoot());
 	newBuilding();
@@ -124,6 +125,10 @@ void CityEngine::updateRoadNetwork(City::RoadNode node) {
 
 	for (unsigned i = 0; i < node->children.size(); i++)
 		updateRoadNetwork(dynamic_pointer_cast<City::RoadNetworkNode>(node->children[i]));
+}
+
+void CityEngine::clickTile(int x, int y) {
+	cout << x << ", " << y << endl;
 }
 
 map<std::string, shared_ptr<long>> CityEngine::getValues() {

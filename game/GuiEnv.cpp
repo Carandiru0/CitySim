@@ -45,7 +45,10 @@ void Gui::events(Event &e) {
 				if (elements[i]->hover && elements[i]->action != nullptr)
 					(this->*elements[i]->action)();
 			}
-		}
+
+			sf::Vector2f mp = app->mapPixelToCoords(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
+			engine.clickTile(mp.x, mp.y);
+		}	
 	} else if (e.type == Event::KeyReleased) {
 		switch (e.key.code) {
 			case Keyboard::E: engine.expandRoads(); break;
