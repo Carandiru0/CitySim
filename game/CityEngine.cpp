@@ -58,6 +58,11 @@ void CityEngine::initMaps() {
 	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::Coord<int>(center.x, center.y - sect)));
 	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::Coord<int>(center.x, center.y + sect)));
 
+	expandRoads();
+	expandRoads();
+
+	roadNetwork->breadthFirstSearch(roadNetwork->getRoot(), topRoads[1]);
+
 	updateRoadNetwork(roadNetwork->getRoot());
 	newBuilding();
 }
@@ -84,6 +89,9 @@ void CityEngine::expandRoads() {
 		if (eNode == nullptr || (eNode != nullptr && (eNode->level == road->level - 1) || (eNode->level == road->level + 1))) {
 			City::RoadNode n1 = roadNetwork->addRoad(road, pos1);
 			topRoads.push_back(n1);
+
+			if(eNode != nullptr)
+				roadNetwork->addNode(eNode, n1);
 		}
 	}
 

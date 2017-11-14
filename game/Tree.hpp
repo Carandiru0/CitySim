@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <list>
 
 #include "EngineInterface.hpp"
 
@@ -44,7 +45,9 @@ namespace City {
 
 			RoadNode addRoad(RoadNode node, Coord<int> pos);
 			RoadNode searchPosition(RoadNode node, Coord<int> pos);
-
+			
+			std::list<RoadNode> breadthFirstSearch(RoadNode start, RoadNode end);
+			
 		private:
 			int counter;
 	};
