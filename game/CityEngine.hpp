@@ -35,7 +35,7 @@ class CityEngine {
 
 		bool stopRoads;
 		std::shared_ptr<long> pop;
-		int sect, roadlevel;
+		int roadlevel;
 		float speed, bspeed, counter, bcounter;
 
 		enum MapLayers { Ground, Build, Zones };

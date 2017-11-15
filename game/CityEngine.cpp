@@ -18,7 +18,6 @@ CityEngine::CityEngine(EngineInterface *_renderer) : renderer(_renderer) {
 	net			= make_shared<Net>(15817);
 	roadNetwork = make_shared<City::RoadNetwork>(center);
 
-	sect	 = 3;
 	speed	 = 1.0f;
 	bspeed	 = speed * 16.0f;
 	counter  = speed;
@@ -60,10 +59,10 @@ void CityEngine::initMaps() {
 		}
 	}
 
-	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::Coord<int>(center.x - sect, center.y)));
-	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::Coord<int>(center.x + sect, center.y)));
-	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::Coord<int>(center.x, center.y - sect)));
-	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::Coord<int>(center.x, center.y + sect)));
+	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::RoadNetworkNode::Horizontal, City::Coord<int>(center.x - 1, center.y)));
+	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::RoadNetworkNode::Horizontal, City::Coord<int>(center.x + 1, center.y)));
+	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::RoadNetworkNode::Vertical, City::Coord<int>(center.x, center.y - 1)));
+	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::RoadNetworkNode::Vertical, City::Coord<int>(center.x, center.y + 1)));
 
 	expandRoads();
 	updateRoadNetwork(roadNetwork->getRoot());
@@ -77,30 +76,58 @@ void CityEngine::expandRoads() {
 
 	for (auto road : tpRoads) {
 		City::RoadNode parent = static_pointer_cast<City::RoadNetworkNode>(road->parent);
-		
 		Vec3D<int> dir(road->pos.x - parent->pos.x, 0, road->pos.y - parent->pos.y);
-		auto adj = dir.cross(Vec3D<int>(0, 1, 0)).normalised() * (float)sect;
-		auto lne = dir.normalised() * (float)sect;
+		
+		auto lne = dir.normalised();
+		auto pos = road->pos + City::Coord<int>((int)lne.getX(), (int)lne.getZ());
 
+		if (road->type != City::RoadNetworkNode::Cross) {
+			int dist_crossroads = 0;
+			auto node = road;
+
+			do {
+				++dist_crossroads;
+
+				if (node->type == City::RoadNetworkNode::Cross)
+					break;
+			} while ((node = static_pointer_cast<City::RoadNetworkNode>(node->parent)) != nullptr);
+
+			City::RoadNode eroad = roadNetwork->searchPosition(roadNetwork->getRoot(), pos);
+
+			if (dist_crossroads < 3) {
+				if (eroad != nullptr) {
+					roadNetwork->addNode(eroad, road);
+				} else {
+					auto type = (dir.getX() == 0) ? City::RoadNetworkNode::Vertical : City::RoadNetworkNode::Horizontal;
+					auto n = roadNetwork->addRoad(road, type, pos);
+					topRoads.push_back(n);
+				}
+			} else {
+				auto n = roadNetwork->addRoad(road, City::RoadNetworkNode::Cross, pos);
+				topRoads.push_back(n);
+			}
+		} else {
+			auto adj_r = dir.cross(Vec3D<int>(0, 1, 0)).normalised();
+			auto adj_l = dir.cross(Vec3D<int>(0, -1, 0)).normalised();
+
+			auto pos_r = road->pos + City::Coord<int>((int)adj_r.getX(), (int)adj_r.getZ());
+			auto pos_l = road->pos + City::Coord<int>((int)adj_l.getX(), (int)adj_l.getZ());
+
+			auto type  = (pos_r.x - road->pos.x == 0) ? City::RoadNetworkNode::Vertical : City::RoadNetworkNode::Horizontal;
+			auto ftyp  = (pos_r.x - road->pos.x == 0) ? City::RoadNetworkNode::Horizontal : City::RoadNetworkNode::Vertical;
+			auto right = roadNetwork->addRoad(road, type, pos_r);
+			auto left  = roadNetwork->addRoad(road, type, pos_l);
+			auto forw  = roadNetwork->addRoad(road, ftyp, pos);
+
+			topRoads.push_back(forw), topRoads.push_back(right), topRoads.push_back(left);
+		}
+		
+		/*
+		auto adj = dir.cross(Vec3D<int>(0, 1, 0)).normalised() * (float)sect;
 		auto pos0 = road->pos + City::Coord<int>((int)lne.getX(), (int)lne.getZ());
 		auto pos1 = road->pos + City::Coord<int>((int)adj.getX(), (int)adj.getZ());
 
-		City::RoadNode eNode = roadNetwork->searchPosition(roadNetwork->getRoot(), pos1);
-		
-		if (inBounds(pos0.x, pos0.y)) {
-			City::RoadNode n0 = roadNetwork->addRoad(road, pos0);
-			topRoads.push_back(n0);
-		}
-
-		if (eNode == nullptr) {
-			if (inBounds(pos1.x, pos1.y)) {
-				City::RoadNode n1 = roadNetwork->addRoad(road, pos1);
-				topRoads.push_back(n1);
-			}
-		} else if ((eNode->level == road->level - 1) || (eNode->level == road->level + 1)) {
-			roadNetwork->addNode(eNode, road);
-			//roadNetwork->addNode(road, eNode);
-		}
+		City::RoadNode eNode = roadNetwork->searchPosition(roadNetwork->getRoot(), pos1);*/
 	}
 
 	//for(auto road : topRoads)
@@ -117,17 +144,18 @@ void CityEngine::updateRoadNetwork(City::RoadNode node) {
 
 	if (node->parent == nullptr) {
 		if (inBounds(node->pos.x, node->pos.y)) {
-			if (children > 0)
+			 if (children > 1)
 				setTile(node->pos.x, node->pos.y, "road_c", 1);
 			else
 				setTile(node->pos.x, node->pos.y, "pavement", 1);
 		}
-	}
-	
-	if (node->parent != nullptr) {
+	} else {
 		if (inBounds(node->pos.x, node->pos.y)) {
-			setTile(node->pos.x, node->pos.y, "road_c", 1);
-			createRoadBetween(node, parent);
+			switch (node->type) {
+				case City::RoadNetworkNode::Horizontal: setTile(node->pos.x, node->pos.y, "road_h", 1); break;
+				case City::RoadNetworkNode::Vertical: setTile(node->pos.x, node->pos.y, "road_v", 1); break;
+				case City::RoadNetworkNode::Cross: setTile(node->pos.x, node->pos.y, "road_c", 1); break;
+			}
 		} else
 			stopRoads = true;
 	}
@@ -171,7 +199,7 @@ void CityEngine::newBuilding(City::Building::BuildingType type) {
 	City::Coord<int> xy;
 	bool found = false;
 
-	std::uniform_int_distribution<> dist_radius(0, roadlevel * sect);
+	std::uniform_int_distribution<> dist_radius(0, roadlevel * 1);
 
 	while (attempts < maxattempts) {
 		float search_radius = (float)dist_radius(rand_gen);

@@ -6,8 +6,9 @@
 
 using namespace City;
 
-RoadNode City::RoadNetwork::addRoad(RoadNode node, Coord<int> pos) {
+RoadNode City::RoadNetwork::addRoad(RoadNode node, RoadNetworkNode::Type type, Coord<int> pos) {
 	RoadNode road = std::make_shared<RoadNetworkNode>(node, pos, ++counter, node->level + 1);
+	road->type = type;
 	node->children.push_back(road);
 	return road;
 }
