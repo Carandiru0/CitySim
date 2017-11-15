@@ -208,7 +208,8 @@ void CityEngine::newBuilding(City::Building::BuildingType type) {
 	City::Coord<int> xy;
 	bool found = false;
 
-	std::uniform_int_distribution<> dist_radius(0, roadlevel * 1);
+	int r = (roadlevel <= 2 ) ? roadlevel : roadlevel - 1;
+	std::uniform_int_distribution<> dist_radius(0, r);
 
 	while (attempts < maxattempts) {
 		float search_radius = (float)dist_radius(rand_gen);
