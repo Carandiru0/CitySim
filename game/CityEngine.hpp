@@ -35,8 +35,8 @@ class CityEngine {
 
 		bool stopRoads;
 		std::shared_ptr<long> pop;
-		int roadlevel;
-		float speed, bspeed, counter, bcounter;
+		int roadlevel, roadIterations;
+		float speed, bspeed, counter, bcounter, upgradecounter;
 
 		enum MapLayers { Ground, Build, Zones };
 
@@ -59,7 +59,6 @@ class CityEngine {
 		City::Coord<int> findRandomWorkplace(City::Coord<int> loc, float radius);
 		std::string getBuildingStr(City::Building::BuildingType type);
 
-		void createRoadBetween(City::RoadNode n1, City::RoadNode n2);
 		void setTile(int x, int y, std::string tile, int layer = 1);
 		bool doesTileExist(int x, int y, int layer);
 

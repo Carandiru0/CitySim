@@ -18,11 +18,13 @@ CityEngine::CityEngine(EngineInterface *_renderer) : renderer(_renderer) {
 	net			= make_shared<Net>(15817);
 	roadNetwork = make_shared<City::RoadNetwork>(center);
 
-	speed	 = 1.0f;
-	bspeed	 = speed * 16.0f;
-	counter  = speed;
-	bcounter = bspeed;
 	stopRoads = false;
+	speed	  = 1.0f;
+	bspeed	  = 0.7f;
+	counter   = speed;
+	bcounter  = bspeed;
+	upgradecounter = 12.f;
+	roadIterations = 4;
 
 	initBuildings();
 	initValues();
@@ -30,17 +32,24 @@ CityEngine::CityEngine(EngineInterface *_renderer) : renderer(_renderer) {
 }
 
 void CityEngine::update(float dt) {
-	counter -= dt, bcounter -= dt;
+	counter -= dt, upgradecounter -= dt;
 
 	if (counter < 0.0f) {
 		newBuilding(City::Building::Res);
 		counter = speed;
 	}
 
-	if (!stopRoads && bcounter < 0.0f) {
-		//expandRoads();
-		//bspeed += bspeed;
-		//bcounter = bspeed;
+	if (!stopRoads && upgradecounter < 0.0f) {
+		bcounter -= dt;
+
+		if (roadIterations <= 0) {
+			roadIterations = 3;
+			upgradecounter = 30.f;
+		} else if (bcounter < 0.0f) {
+			expandRoads();
+			bcounter = 0.7f;
+			roadIterations--;
+		}
 	}
 }
 
@@ -287,28 +296,6 @@ std::string CityEngine::getBuildingStr(City::Building::BuildingType type) {
 	std::discrete_distribution<int> dist(d.begin(), d.end());
 
 	return buildingTypes[type][dist(rand_gen)];
-}
-
-void CityEngine::createRoadBetween(City::RoadNode n1, City::RoadNode n2) {
-	auto diff = n2->pos - n1->pos;
-	int dist = (int)sqrt(diff.x * diff.x + diff.y * diff.y);
-	bool vert;
-	int dir;
-
-	if (diff.x == 0) {
-		vert = true;
-		dir = (diff.y < 0) ? 1 : -1;
-	} else {
-		vert = false;
-		dir = (diff.x < 0) ? 1 : -1;
-	}
-
-	for (int i = 1; i < dist; i++) {
-		if (vert)
-			setTile(n2->pos.x, n2->pos.y + (i * dir), "road_v", 1);
-		else
-			setTile(n2->pos.x + (i * dir), n2->pos.y, "road_h", 1);
-	}
 }
 
 void CityEngine::setTile(int x, int y, string tile, int layer) {
