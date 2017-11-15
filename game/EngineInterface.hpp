@@ -14,11 +14,13 @@ namespace City {
 		inline void operator-=(Coord<T> n) { x -= n.x; y -= n.y; }
 		inline Coord<T> operator+(Coord<T> n) { return Coord<T>(x + n.x, y + n.y); }
 		inline Coord<T> operator-(Coord<T> n) { return Coord<T>(x - n.x, y - n.y); }
+
+		inline std::string toString() { return "(" + std::to_string(x) + ", " + std::to_string(y) + ")"; }
 	};
 
 	template <class T> struct CoordComp {
 		bool operator() (const Coord<T> &l, const Coord<T> &r) const {
-			return l.x < r.x || (l.x == r.x && l.y < r.y);
+			return std::make_pair(l.x, l.y) > std::make_pair(r.x, r.y);
 		}
 	};
 
@@ -78,11 +80,12 @@ namespace City {
 
 			Building() {
 				type = Res, numWorkers = 0, maxWorkers = 20;
+				workplace = Coord<int>(-1, -1);
 			}
 
 			Building(BuildingType _type) {
 				type = _type, numWorkers = 0, maxWorkers = 20;
-			
+				workplace = Coord<int>(-1, -1);
 			}
 
 			int getWorkers() { return numWorkers; }

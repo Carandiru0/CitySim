@@ -44,14 +44,14 @@ class Gui {
 		std::map<std::string, std::shared_ptr<long>> hudValues;
 
 	public:
-		Gui(const SpriteHandler &sprHandler, std::shared_ptr<sf::RenderWindow> app, const CityEngine &engine);
+		Gui(SpriteHandler &sprHandler, std::shared_ptr<sf::RenderWindow> app, CityEngine &engine);
 
 		void render(float dt);
 		void events(sf::Event &e);
 
 	private:
-		CityEngine engine;
-		SpriteHandler sprHandler;
+		CityEngine &engine;
+		SpriteHandler &sprHandler;
 
 		std::shared_ptr<sf::RenderWindow> app;
 		std::vector<std::shared_ptr<GuiElement>> elements;

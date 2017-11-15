@@ -65,8 +65,9 @@ void CityEngine::initMaps() {
 	topRoads.push_back(roadNetwork->addRoad(roadNetwork->getRoot(), City::Coord<int>(center.x, center.y + sect)));
 
 	expandRoads();
-
 	updateRoadNetwork(roadNetwork->getRoot());
+
+	newBuilding(City::Building::Com);
 }
 
 void CityEngine::expandRoads() {
@@ -136,25 +137,23 @@ void CityEngine::updateRoadNetwork(City::RoadNode node) {
 
 void CityEngine::clickTile(int x, int y) {
 	City::Coord<int> coord = renderer->getIsoFromMouseXY(x, y);
-	
-	cout << coord.x << " " << coord.y << "\n";
 
-	auto node = roadNetwork->searchPosition(roadNetwork->getRoot(), coord);
-	
-	if(node != nullptr)
-		nodesToFind.push_back(node);
+	if(buildings.find(coord) != buildings.end()) {
+		City::Coord<int> place = buildings[coord].getWorkplace();
 
-	if (nodesToFind.size() >= 2) {
-		auto path = roadNetwork->breadthFirstSearch(nodesToFind[0], nodesToFind[1]);
-		nodesToFind.clear();
+		if (place.x >= 0 && place.y >= 0) {
+			auto n0 = findClosestNode(coord);
+			auto n1 = findClosestNode(place);
+			auto path = roadNetwork->breadthFirstSearch(n0, n1);
 
-		vector<City::Coord<int>> vertices;
+			vector<City::Coord<int>> vertices;
 
-		for (auto n : path)
-			vertices.push_back(n->pos);
+			for (auto n : path)
+				vertices.push_back(n->pos);
 
-		if (!path.empty())
-			renderer->drawPath(vertices);
+			if (!path.empty())
+				renderer->drawPath(vertices);
+		}
 	}
 }
 
@@ -192,15 +191,39 @@ void CityEngine::newBuilding(City::Building::BuildingType type) {
 	}
 	
 	if (found && inBounds(xy.x, xy.y)) {
+		//cout << "Adding building at (" << xy.x << ", " << xy.y << ")\n";
 		setTile(xy.x, xy.y, getBuildingStr(type), 1);
 		buildings[xy] = City::Building(type);
 		*pop += 4;
 
-		City::Coord<int> place = findRandomWorkplace(xy, 10.f);
+		City::Coord<int> place = findRandomWorkplace(xy, 50.f);
 
-		if (place.x >= 0 && place.y >= 0)
+		if (type == City::Building::Res && place.x >= 0 && place.y >= 0)
 			buildings[xy].assignWorkplace(place);
 	}
+}
+
+City::RoadNode CityEngine::findClosestNode(City::Coord<int> pos) {
+	float ldist = 1000.f;
+	City::RoadNode node = roadNetwork->getRoot();
+
+	for (int y = pos.y - 2; y <= pos.y + 2; ++y) {
+		for (int x = pos.x - 2; x <= pos.x + 2; ++x) {
+			City::Coord<int> p(x, y);
+
+			City::RoadNode n = roadNetwork->searchPosition(roadNetwork->getRoot(), p);
+
+			if (n != nullptr) {
+				float dx = n->pos.x - pos.x, dy = n->pos.y - pos.y;
+				float dist = sqrtf(dx * dx + dy * dy);
+
+				if (dist < ldist)
+					ldist = dist, node = n;
+			}
+		}
+	}
+
+	return node;
 }
 
 City::Coord<int> CityEngine::findRandomWorkplace(City::Coord<int> loc, float radius) {

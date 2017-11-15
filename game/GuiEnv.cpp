@@ -5,7 +5,7 @@
 using namespace sf;
 using namespace std;
 
-Gui::Gui(const SpriteHandler &spr, shared_ptr<RenderWindow> _app, const CityEngine &_engine)
+Gui::Gui(SpriteHandler &spr, shared_ptr<RenderWindow> _app, CityEngine &_engine)
 	: engine(_engine), sprHandler(spr)
 {
 	app = _app;

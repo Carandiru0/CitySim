@@ -55,6 +55,7 @@ class CityEngine {
 		void initMaps();
 		void initValues();
 		
+		City::RoadNode findClosestNode(City::Coord<int> pos);
 		City::Coord<int> findRandomWorkplace(City::Coord<int> loc, float radius);
 		std::string getBuildingStr(City::Building::BuildingType type);
 
