@@ -51,7 +51,7 @@ std::list<RoadNode> City::RoadNetwork::breadthFirstSearch(RoadNode start, RoadNo
 
 		std::vector<RoadNode> next;
 
-		if(current->parent != nullptr)
+		if (current->parent != nullptr)
 			next.push_back(std::dynamic_pointer_cast<RoadNetworkNode>(current->parent));
 
 		for (auto child : current->children)

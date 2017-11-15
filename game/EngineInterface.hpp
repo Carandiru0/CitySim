@@ -16,6 +16,12 @@ namespace City {
 		inline Coord<T> operator-(Coord<T> n) { return Coord<T>(x - n.x, y - n.y); }
 	};
 
+	template <class T> struct CoordComp {
+		bool operator() (const Coord<T> &l, const Coord<T> &r) const {
+			return l.x < r.x || (l.x == r.x && l.y < r.y);
+		}
+	};
+
 	struct Zone {
 		Coord<int> begin, end;
 		enum ZoneType { Residential, Commercial, Industrial } type;
@@ -68,16 +74,30 @@ namespace City {
 
 	class Building {
 		public:
-			Building() {}
+			enum BuildingType { Res, Ind, Com };
 
-			enum class BuildingType { Res, Ind, Com };
+			Building() {
+				type = Res, numWorkers = 0, maxWorkers = 20;
+			}
 
+			Building(BuildingType _type) {
+				type = _type, numWorkers = 0, maxWorkers = 20;
+			
+			}
+
+			int getWorkers() { return numWorkers; }
+			int getMaxJobs() { return maxWorkers; }
+			bool isFull() { return numWorkers >= maxWorkers; }
+ 			
 			BuildingType getType() { return type; }
-			Coord<int> getPos() { return map_pos; }
+
+			Coord<int> getWorkplace() { return workplace; }
+			void assignWorkplace(Coord<int> place) { workplace = place; }
 
 		private:
+			Coord<int> workplace;
 			BuildingType type;
-			Coord<int> map_pos;
+			int numWorkers, maxWorkers;
 	};
 }
 

@@ -14,9 +14,10 @@ IsoEngine::IsoEngine(const SpriteHandler &_spr, std::shared_ptr<RenderWindow> _a
 
 	tiles["grass"]		= { sprHandler.create("grass") };
 	tiles["pavement"]	= { sprHandler.create("pavement") };
-	tiles["building1"]	= { sprHandler.create("building1") };
-	tiles["building2"]  = { sprHandler.create("building2") };
-	tiles["building3"]  = { sprHandler.create("building3") };
+	tiles["res1"]		= { sprHandler.create("res1") };
+	tiles["res2"]		= { sprHandler.create("res2") };
+	tiles["res3"]		= { sprHandler.create("res3") };
+	tiles["com1"]		= { sprHandler.create("com1") };
 	tiles["zone_res"]	= { sprHandler.create("zone_res") };
 	tiles["road_c"]		= { sprHandler.create("road_c") };
 	tiles["road_v"]		= { sprHandler.create("road_v") };
@@ -86,8 +87,8 @@ void IsoEngine::drawPath(std::vector<City::Coord<int>> vertices) {
 	path.clear();
 
 	for (auto v : vertices) {
-		auto v0 = xy_iso(City::Coord<float>(last.x, last.y)) + offset;
-		auto v1 = xy_iso(City::Coord<float>(v.x, v.y)) + offset;
+		auto v0 = xy_iso(City::Coord<float>((float)last.x, (float)last.y)) + offset;
+		auto v1 = xy_iso(City::Coord<float>((float)v.x, (float)v.y)) + offset;
 
 		path.push_back(sfLine(Vector2f(v0.x, v0.y), Vector2f(v1.x, v1.y)));
 

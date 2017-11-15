@@ -47,12 +47,12 @@ void Gui::events(Event &e) {
 			}
 
 			sf::Vector2f mp = app->mapPixelToCoords(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
-			engine.clickTile(mp.x, mp.y);
+			engine.clickTile((int)mp.x, (int)mp.y);
 		}	
 	} else if (e.type == Event::KeyReleased) {
 		switch (e.key.code) {
 			case Keyboard::E: engine.expandRoads(); break;
-			case Keyboard::B: engine.newBuilding(); break;
+			case Keyboard::B: engine.newBuilding(City::Building::Com); break;
 		}
 	}
 }

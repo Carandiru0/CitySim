@@ -45,14 +45,19 @@ class CityEngine {
 
 		City::Coord<int> center, dims;
 
-		std::map<int, City::Building> buildings;
+		std::map<City::Building::BuildingType, std::vector<std::string>> buildingTypes;
+		std::map<City::Coord<int>, City::Building, City::CoordComp<int>> buildings;
 		std::shared_ptr<City::RoadNetwork> roadNetwork;
 		std::vector<City::RoadNode> topRoads;
 		std::vector<City::RoadNode> nodesToFind;
 
+		void initBuildings();
 		void initMaps();
 		void initValues();
 		
+		City::Coord<int> findRandomWorkplace(City::Coord<int> loc, float radius);
+		std::string getBuildingStr(City::Building::BuildingType type);
+
 		void createRoadBetween(City::RoadNode n1, City::RoadNode n2);
 		void setTile(int x, int y, std::string tile, int layer = 1);
 		bool doesTileExist(int x, int y, int layer);
@@ -61,7 +66,7 @@ class CityEngine {
 		inline City::Coord<float> polar_to_xy(float angle, float r);
 
 	public:
-		void newBuilding();
+		void newBuilding(City::Building::BuildingType type);
 		void expandRoads();
 		void updateRoadNetwork(City::RoadNode node);
 		void clickTile(int x, int y);

@@ -24,6 +24,7 @@ CityEngine::CityEngine(EngineInterface *_renderer) : renderer(_renderer) {
 	bcounter = bspeed;
 	stopRoads = false;
 
+	initBuildings();
 	initValues();
 	initMaps();
 }
@@ -32,7 +33,7 @@ void CityEngine::update(float dt) {
 	counter -= dt, bcounter -= dt;
 
 	if (counter < 0.0f) {
-		newBuilding();
+		newBuilding(City::Building::Res);
 		counter = speed;
 	}
 
@@ -41,6 +42,11 @@ void CityEngine::update(float dt) {
 		//bspeed += bspeed;
 		//bcounter = bspeed;
 	}
+}
+
+void CityEngine::initBuildings() {
+	buildingTypes[City::Building::Res] = { "res1", "res2", "res3" };
+	buildingTypes[City::Building::Com] = { "com1" };
 }
 
 void CityEngine::initMaps() {
@@ -61,7 +67,6 @@ void CityEngine::initMaps() {
 	expandRoads();
 
 	updateRoadNetwork(roadNetwork->getRoot());
-	newBuilding();
 }
 
 void CityEngine::expandRoads() {
@@ -69,7 +74,7 @@ void CityEngine::expandRoads() {
 	topRoads.clear();
 
 	for (auto road : tpRoads) {
-		City::RoadNode parent = static_pointer_cast <City::RoadNetworkNode>(road->parent);
+		City::RoadNode parent = static_pointer_cast<City::RoadNetworkNode>(road->parent);
 		
 		Vec3D<int> dir(road->pos.x - parent->pos.x, 0, road->pos.y - parent->pos.y);
 		auto adj = dir.cross(Vec3D<int>(0, 1, 0)).normalised() * (float)sect;
@@ -85,19 +90,19 @@ void CityEngine::expandRoads() {
 			topRoads.push_back(n0);
 		}
 
-		if (eNode == nullptr || (eNode != nullptr && (eNode->level == road->level - 1) || (eNode->level == road->level + 1))) {
+		if (eNode == nullptr) {
 			if (inBounds(pos1.x, pos1.y)) {
 				City::RoadNode n1 = roadNetwork->addRoad(road, pos1);
 				topRoads.push_back(n1);
-
-				if (eNode != nullptr)
-					roadNetwork->addNode(eNode, n1);
 			}
+		} else if ((eNode->level == road->level - 1) || (eNode->level == road->level + 1)) {
+			roadNetwork->addNode(eNode, road);
+			//roadNetwork->addNode(road, eNode);
 		}
 	}
 
-	for(auto road : topRoads)
-		updateRoadNetwork(road);
+	//for(auto road : topRoads)
+	updateRoadNetwork(roadNetwork->getRoot());
 
 	roadlevel++;
 }
@@ -161,7 +166,7 @@ map<std::string, shared_ptr<long>> CityEngine::getValues() {
 	return vals;
 }
 
-void CityEngine::newBuilding() {
+void CityEngine::newBuilding(City::Building::BuildingType type) {
 	int attempts = 0, maxattempts = 100;
 	City::Coord<int> xy;
 	bool found = false;
@@ -187,9 +192,43 @@ void CityEngine::newBuilding() {
 	}
 	
 	if (found && inBounds(xy.x, xy.y)) {
-		setTile(xy.x, xy.y, "building1", 1);
+		setTile(xy.x, xy.y, getBuildingStr(type), 1);
+		buildings[xy] = City::Building(type);
 		*pop += 4;
+
+		City::Coord<int> place = findRandomWorkplace(xy, 10.f);
+
+		if (place.x >= 0 && place.y >= 0)
+			buildings[xy].assignWorkplace(place);
 	}
+}
+
+City::Coord<int> CityEngine::findRandomWorkplace(City::Coord<int> loc, float radius) {
+	vector<City::Coord<int>> available;
+
+	for (auto &place : buildings) {
+		if (place.second.getType() == City::Building::Com && !place.second.isFull()) {
+			float dx = (float)(loc.x - place.first.x), dy = (float)(loc.y - place.first.y);
+			float dist = sqrtf(dx * dx + dy * dy);
+
+			if (dist <= radius)
+				available.push_back(place.first);
+		}
+	}
+
+	if (available.size() > 0) {
+		std::uniform_int_distribution<> dist(0, available.size() - 1);
+		return available[dist(rand_gen)];
+	}
+
+	return City::Coord<int>(-1, -1);
+}
+
+std::string CityEngine::getBuildingStr(City::Building::BuildingType type) {
+	int max = buildingTypes[type].size() - 1;
+	std::uniform_int_distribution<> dist(0, max);
+
+	return buildingTypes[type][dist(rand_gen)];
 }
 
 void CityEngine::createRoadBetween(City::RoadNode n1, City::RoadNode n2) {

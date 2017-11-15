@@ -44,6 +44,7 @@ namespace City {
 			}
 
 			RoadNode addRoad(RoadNode node, Coord<int> pos);
+			//RoadNode addRoad(RoadNode node, RoadNode child);
 			RoadNode searchPosition(RoadNode node, Coord<int> pos);
 			
 			std::list<RoadNode> breadthFirstSearch(RoadNode start, RoadNode end);

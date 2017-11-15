@@ -11,9 +11,10 @@ SpriteHandler::SpriteHandler()
 	sprites["pavement"]		= main_sheet.get(0, 1);
 	sprites["zone_res"]		= main_sheet.get(1, 0);
 
-	sprites["building1"]	= main_sheet.get(0, 2, 1);
-	sprites["building2"]	= main_sheet.get(0, 3, 1);
-	sprites["building3"]	= main_sheet.get(2, 2, 2);
+	sprites["res1"]			= main_sheet.get(0, 2, 1);
+	sprites["res2"]			= main_sheet.get(0, 3, 1);
+	sprites["res3"]			= main_sheet.get(2, 2, 2);
+	sprites["com1"]			= main_sheet.get(2, 3, 2);
 
 	sprites["road_c"]		= main_sheet.get(1, 1, 1);
 	sprites["road_v"]		= main_sheet.get(2, 0, 1);
