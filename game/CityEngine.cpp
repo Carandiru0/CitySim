@@ -1,6 +1,7 @@
 #include "CityEngine.hpp"
 #include "Vec3D.h"
 
+#include <array>
 #include <iostream>
 #include <chrono>
 
@@ -248,8 +249,14 @@ City::Coord<int> CityEngine::findRandomWorkplace(City::Coord<int> loc, float rad
 }
 
 std::string CityEngine::getBuildingStr(City::Building::BuildingType type) {
-	int max = buildingTypes[type].size() - 1;
-	std::uniform_int_distribution<> dist(0, max);
+	int max = (int)buildingTypes[type].size();
+
+	std::vector<int> d;
+
+	for (int i = 0; i < max; i++)
+		d.push_back(max - i);
+
+	std::discrete_distribution<int> dist(d.begin(), d.end());
 
 	return buildingTypes[type][dist(rand_gen)];
 }

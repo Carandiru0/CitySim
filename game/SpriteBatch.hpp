@@ -31,12 +31,12 @@ class sfLine : public sf::Drawable {
 		sfLine() {}
 
 		sfLine(const sf::Vector2f& point1, const sf::Vector2f& point2) :
-			color(sf::Color::Yellow), thickness(5.f)
+			color(sf::Color::Red), thickness(5.f)
 		{
 			set(point1, point2);
 		}
 
-		void set(const sf::Vector2f& point1, const sf::Vector2f& point2) {
+		void set(const sf::Vector2f &point1, const sf::Vector2f &point2) {
 			sf::Vector2f direction = point2 - point1;
 			sf::Vector2f unitDirection = direction / std::sqrt(direction.x*direction.x + direction.y*direction.y);
 			sf::Vector2f unitPerpendicular(-unitDirection.y, unitDirection.x);
