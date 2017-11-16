@@ -47,9 +47,13 @@ namespace City {
 			RoadNode addRoad(RoadNode node, RoadNetworkNode::Type type, Coord<int> pos);
 			RoadNode searchPosition(RoadNode node, Coord<int> pos);
 			
-			std::list<RoadNode> breadthFirstSearch(RoadNode start, RoadNode end);
+			std::list<RoadNode> pathfind_bfs(RoadNode start, RoadNode goal);
+			std::list<RoadNode> pathfind_astar(RoadNode start, RoadNode goal);
 			
 		private:
 			int counter;
+
+			float distance(RoadNode start, RoadNode goal);
+			float heuristic(RoadNode start, RoadNode goal);
 	};
 }

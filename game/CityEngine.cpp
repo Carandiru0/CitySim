@@ -185,7 +185,7 @@ void CityEngine::clickTile(int x, int y) {
 			auto n0 = findClosestNode(coord, d);
 			auto n1 = findClosestNode(place, d);
 
-			auto path = roadNetwork->breadthFirstSearch(n0, n1);
+			auto path = roadNetwork->pathfind_astar(n0, n1);
 
 			vector<City::Coord<int>> vertices;
 
@@ -221,7 +221,7 @@ void CityEngine::newBuilding(City::Building::BuildingType type) {
 	City::Coord<int> xy;
 	bool found = false;
 
-	int r = (roadlevel <= 2 ) ? roadlevel : roadlevel - 1;
+	int r = (roadlevel <= 2 ) ? roadlevel : roadlevel - 2;
 	std::uniform_int_distribution<> dist_radius(0, r);
 
 	while (attempts < maxattempts) {

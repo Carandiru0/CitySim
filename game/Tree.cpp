@@ -28,7 +28,7 @@ RoadNode City::RoadNetwork::searchPosition(RoadNode node, Coord<int> pos) {
 	return nullptr;
 }
 
-std::list<RoadNode> City::RoadNetwork::breadthFirstSearch(RoadNode start, RoadNode end) {
+std::list<RoadNode> City::RoadNetwork::pathfind_bfs(RoadNode start, RoadNode goal) {
 	std::list<RoadNode> path;
 	std::vector<RoadNode> open;
 	std::set<RoadNode> closed;
@@ -45,7 +45,7 @@ std::list<RoadNode> City::RoadNetwork::breadthFirstSearch(RoadNode start, RoadNo
 		RoadNode current = open.front();
 		open.erase(open.begin(), open.begin() + 1);
 
-		if (current == end) {
+		if (current == goal) {
 			goal_found = true;
 			break;
 		}
@@ -78,7 +78,7 @@ std::list<RoadNode> City::RoadNetwork::breadthFirstSearch(RoadNode start, RoadNo
 	}
 
 	if (goal_found) {
-		RoadNode n = end;
+		RoadNode n = goal;
 		path.push_back(n);
 
 		while (n = data[n])
@@ -92,4 +92,92 @@ std::list<RoadNode> City::RoadNetwork::breadthFirstSearch(RoadNode start, RoadNo
 	}*/
 
 	return path;
+}
+
+std::list<RoadNode> City::RoadNetwork::pathfind_astar(RoadNode start, RoadNode goal) {
+	std::list<RoadNode> path;
+	std::set<RoadNode> open;
+	std::set<RoadNode> closed;
+
+	std::map<RoadNode, RoadNode> data;
+	std::map<RoadNode, float> g_score;
+	std::map<RoadNode, float> f_score;
+
+	g_score[start] = 0.f;
+	f_score[start] = heuristic(start, goal);
+	
+	open.insert(start);
+	
+	bool goal_found = false;
+
+	while (!open.empty()) {
+		RoadNode current;
+		float min_score = 10000.f;
+
+		for (auto n : open)
+			if (f_score[n] < min_score)
+				min_score = f_score[n], current = n;
+
+		if (current == goal) {
+			goal_found = true;
+			break;
+		}
+
+		open.erase(current);
+		closed.insert(current);
+
+		std::vector<RoadNode> next;
+
+		if (current->parent != nullptr)
+			next.push_back(std::dynamic_pointer_cast<RoadNetworkNode>(current->parent));
+
+		for (auto child : current->children)
+			next.push_back(std::dynamic_pointer_cast<RoadNetworkNode>(child));
+
+		for (auto node : next) {
+			if (closed.find(node) != closed.end())
+				continue;
+
+			if (open.find(node) == open.end())
+				open.insert(node);
+
+			float n_score = g_score[current] + distance(current, node);
+
+			if (g_score.find(node) == g_score.end())
+				g_score[node] = 10000.f;
+
+			if (n_score >= g_score[node])
+				continue;
+
+			data[node] = current;
+			g_score[node] = n_score;
+			f_score[node] = n_score + heuristic(node, goal);
+		}
+	}
+
+	if (goal_found) {
+		RoadNode n = goal;
+		path.push_back(n);
+
+		while (n = data[n])
+			path.push_back(n);
+
+		path.reverse();
+	}
+
+	return path;
+}
+
+float City::RoadNetwork::distance(RoadNode start, RoadNode goal) {
+	float dx = goal->pos.x - start->pos.x;
+	float dy = goal->pos.y - start->pos.y;
+
+	return sqrtf(dx * dx + dy * dy);
+}
+
+float City::RoadNetwork::heuristic(RoadNode start, RoadNode goal) {
+	float dx = goal->pos.x - start->pos.x;
+	float dy = goal->pos.y - start->pos.y;
+
+	return sqrtf(dx * dx + dy * dy);
 }
