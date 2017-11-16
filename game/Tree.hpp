@@ -31,8 +31,11 @@ namespace City {
 		enum Type { Cross, Vertical, Horizontal } type;
 		Coord<int> pos;
 
+		bool road_closed;
+
 		RoadNetworkNode(std::shared_ptr<RoadNetworkNode> _parent, Coord<int> _pos, int _n, int _level) : TNode(_parent) {
 			pos = _pos; n = _n, level = _level, type = Cross;
+			road_closed = false;
 		}
 	};
 
@@ -42,6 +45,7 @@ namespace City {
 		public:
 			RoadNetwork(Coord<int> initial_pos) : NTree(), counter(0) {
 				root = std::make_shared<RoadNetworkNode>(nullptr, initial_pos, 0, 0);
+				root->road_closed = true;
 			}
 
 			RoadNode addRoad(RoadNode node, RoadNetworkNode::Type type, Coord<int> pos);
@@ -54,6 +58,6 @@ namespace City {
 			int counter;
 
 			float distance(RoadNode start, RoadNode goal);
-			float heuristic(RoadNode start, RoadNode goal);
+			float heuristic(RoadNode node, RoadNode goal);
 	};
 }

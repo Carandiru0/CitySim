@@ -30,8 +30,8 @@ class sfLine : public sf::Drawable {
 	public:
 		sfLine() {}
 
-		sfLine(const sf::Vector2f& point1, const sf::Vector2f& point2) :
-			color(sf::Color::Red), thickness(5.f)
+		sfLine(const sf::Vector2f& point1, const sf::Vector2f& point2, sf::Color c) :
+			color(c), thickness(3.5f)
 		{
 			set(point1, point2);
 		}

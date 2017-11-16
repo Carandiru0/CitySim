@@ -23,7 +23,7 @@ CityEngine::CityEngine(EngineInterface *_renderer) : renderer(_renderer) {
 	bspeed	  = 0.7f;
 	counter   = speed;
 	bcounter  = bspeed;
-	upgradecounter = 12.f;
+	upgradecounter = 8.f;
 	roadIterations = 4;
 
 	initBuildings();
@@ -44,7 +44,7 @@ void CityEngine::update(float dt) {
 
 		if (roadIterations <= 0) {
 			roadIterations = 3;
-			upgradecounter = 30.f;
+			upgradecounter = 8.f;
 		} else if (bcounter < 0.0f) {
 			expandRoads();
 			bcounter = 0.7f;
@@ -185,15 +185,22 @@ void CityEngine::clickTile(int x, int y) {
 			auto n0 = findClosestNode(coord, d);
 			auto n1 = findClosestNode(place, d);
 
-			auto path = roadNetwork->pathfind_astar(n0, n1);
+			auto path_a = roadNetwork->pathfind_bfs(n0, n1);
+			auto path_b = roadNetwork->pathfind_astar(n0, n1);
 
-			vector<City::Coord<int>> vertices;
+			vector<City::Coord<int>> vert_a, vert_b;
 
-			for (auto n : path)
-				vertices.push_back(n->pos);
+			for (auto n : path_a)
+				vert_a.push_back(n->pos);
 
-			if (!path.empty())
-				renderer->drawPath(vertices);
+			for (auto n : path_b)
+				vert_b.push_back(n->pos);
+
+			if (!path_a.empty())
+				renderer->drawPath(vert_a, 0);
+
+			if (!path_b.empty())
+				renderer->drawPath(vert_b, 1);
 		}
 	}
 	else {

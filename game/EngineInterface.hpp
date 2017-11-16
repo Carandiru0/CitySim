@@ -111,6 +111,6 @@ class EngineInterface {
 		virtual City::Coord<int> getDimensions() = 0;
 		virtual City::Coord<int> getIsoFromMouseXY(int x, int y) = 0;
 
-		virtual void drawPath(std::vector<City::Coord<int>> vertices) = 0;
+		virtual void drawPath(std::vector<City::Coord<int>> vertices, int layer) = 0;
 		virtual void setTile(City::Coord<int> position, std::string tile, int layer = Ground) = 0;
 };

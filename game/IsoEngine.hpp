@@ -57,7 +57,7 @@ class IsoEngine : public EngineInterface {
 		Sprite hoverTile;
 		SpriteBatch batch;
 
-		std::vector<sfLine> path;
+		std::map<int, std::vector<sfLine>> path;
 
 		City::Coord<int> dimensions;
 		City::Coord<float> offset;
@@ -69,6 +69,6 @@ class IsoEngine : public EngineInterface {
 		inline City::Coord<float> origin(std::shared_ptr<IsoMap> map);
 
 	public:
-		void drawPath(std::vector<City::Coord<int>> vertices);
+		void drawPath(std::vector<City::Coord<int>> vertices, int layer);
 		void setTile(City::Coord<int> position, std::string tile, int layer = Ground);
 };

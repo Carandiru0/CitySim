@@ -62,8 +62,9 @@ void IsoEngine::render() {
 	batch.draw(hoverTile);
 	batch.display();
 	
-	for (auto l : path)
-		app->draw(l);
+	for (auto &p : path)
+		for (auto l : p.second)
+			app->draw(l);
 }
 
 City::Coord<int> IsoEngine::getIsoFromMouseXY(int mx, int my) {
@@ -82,18 +83,20 @@ City::Coord<int> IsoEngine::getIsoFromMouseXY(int mx, int my) {
 	return City::Coord<int>(x, y);
 }
 
-void IsoEngine::drawPath(std::vector<City::Coord<int>> vertices) {
+void IsoEngine::drawPath(std::vector<City::Coord<int>> vertices, int layer) {
 	City::Coord<int> last = vertices[0];
-	path.clear();
+	path[layer].clear();
 
-	for (auto v : vertices) {
+	for (auto &v : vertices) {
 		auto v0 = xy_iso(City::Coord<float>((float)last.x, (float)last.y)) + offset;
 		auto v1 = xy_iso(City::Coord<float>((float)v.x, (float)v.y)) + offset;
 
-		path.push_back(sfLine(Vector2f(v0.x, v0.y), Vector2f(v1.x, v1.y)));
+		path[layer].push_back(sfLine(Vector2f(v0.x, v0.y + layer * 5.f), Vector2f(v1.x, v1.y + layer * 5.0f), sf::Color(0, 200 * layer, 255)));
 
 		last = v;
 	}
+
+	//path[layer].push_back(sfLine(Vector2f(50.f, 50.f + layer * 10.f), Vector2f(200.f, 200.f + layer * 10.f), sf::Color(180 * layer, 200, 255)));
 }
 
 void IsoEngine::setTile(Coord<int> position, string tile, int layer) {

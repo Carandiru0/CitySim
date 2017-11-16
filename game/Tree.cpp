@@ -175,9 +175,6 @@ float City::RoadNetwork::distance(RoadNode start, RoadNode goal) {
 	return sqrtf(dx * dx + dy * dy);
 }
 
-float City::RoadNetwork::heuristic(RoadNode start, RoadNode goal) {
-	float dx = goal->pos.x - start->pos.x;
-	float dy = goal->pos.y - start->pos.y;
-
-	return sqrtf(dx * dx + dy * dy);
+float City::RoadNetwork::heuristic(RoadNode node, RoadNode goal) {
+	return node->road_closed ? 1000.f : 0.f;
 }
