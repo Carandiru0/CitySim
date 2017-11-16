@@ -36,8 +36,8 @@ std::list<RoadNode> City::RoadNetwork::breadthFirstSearch(RoadNode start, RoadNo
 
 	open.push_back(start);
 
-	std::cout << "Starting at (" << start->pos.x << ", " << start->pos.y << ")\n";
-	std::cout << "Finding (" << end->pos.x << ", " << end->pos.y << ")\n\n";
+	//std::cout << "Starting at (" << start->pos.x << ", " << start->pos.y << ")\n";
+	//std::cout << "Finding (" << end->pos.x << ", " << end->pos.y << ")\n\n";
 
 	bool goal_found = false;
 
@@ -87,9 +87,9 @@ std::list<RoadNode> City::RoadNetwork::breadthFirstSearch(RoadNode start, RoadNo
 		path.reverse();
 	}
 
-	for (auto i : path) {
+	/*for (auto i : path) {
 		std::cout << "(" << i->pos.x << ", " << i->pos.y << ")\n";
-	}
+	}*/
 
 	return path;
 }

@@ -32,7 +32,7 @@ namespace City {
 		Coord<int> pos;
 
 		RoadNetworkNode(std::shared_ptr<RoadNetworkNode> _parent, Coord<int> _pos, int _n, int _level) : TNode(_parent) {
-			pos = _pos; n = _n, level = _level;
+			pos = _pos; n = _n, level = _level, type = Cross;
 		}
 	};
 
@@ -45,7 +45,6 @@ namespace City {
 			}
 
 			RoadNode addRoad(RoadNode node, RoadNetworkNode::Type type, Coord<int> pos);
-			//RoadNode addRoad(RoadNode node, RoadNode child);
 			RoadNode searchPosition(RoadNode node, Coord<int> pos);
 			
 			std::list<RoadNode> breadthFirstSearch(RoadNode start, RoadNode end);

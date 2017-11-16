@@ -180,8 +180,11 @@ void CityEngine::clickTile(int x, int y) {
 		City::Coord<int> place = buildings[coord].getWorkplace();
 
 		if (place.x >= 0 && place.y >= 0) {
-			auto n0 = findClosestNode(coord);
-			auto n1 = findClosestNode(place);
+			int d;
+
+			auto n0 = findClosestNode(coord, d);
+			auto n1 = findClosestNode(place, d);
+
 			auto path = roadNetwork->breadthFirstSearch(n0, n1);
 
 			vector<City::Coord<int>> vertices;
@@ -191,6 +194,16 @@ void CityEngine::clickTile(int x, int y) {
 
 			if (!path.empty())
 				renderer->drawPath(vertices);
+		}
+	}
+	else {
+		auto node = roadNetwork->searchPosition(roadNetwork->getRoot(), coord);
+
+		if (node != nullptr) {
+			cout << "Node " << node->pos.toString() << "\n";
+			cout << "\t- " << node->children.size() << " children\n";
+			cout << "\t- Type: " << ((node->type == 0) ? "Cross" : ((node->type == 1) ? "Vertical" : "Horizontal")) << "\n";
+			cout << "\t- Level " << node->level << "\n\n";
 		}
 	}
 }
@@ -242,7 +255,7 @@ void CityEngine::newBuilding(City::Building::BuildingType type) {
 	}
 }
 
-City::RoadNode CityEngine::findClosestNode(City::Coord<int> pos) {
+City::RoadNode CityEngine::findClosestNode(City::Coord<int> pos, int &distance) {
 	float ldist = 1000.f;
 	City::RoadNode node = roadNetwork->getRoot();
 
@@ -261,6 +274,8 @@ City::RoadNode CityEngine::findClosestNode(City::Coord<int> pos) {
 			}
 		}
 	}
+	
+	distance = (int)ldist;
 
 	return node;
 }
