@@ -51,8 +51,8 @@ namespace City {
 			RoadNode addRoad(RoadNode node, RoadNetworkNode::Type type, Coord<int> pos);
 			RoadNode searchPosition(RoadNode node, Coord<int> pos);
 			
-			std::list<RoadNode> pathfind_bfs(RoadNode start, RoadNode goal);
-			std::list<RoadNode> pathfind_astar(RoadNode start, RoadNode goal);
+			std::list<RoadNode> pathfind_bfs(RoadNode start, RoadNode end);
+			std::list<RoadNode> pathfind_astar(RoadNode start, RoadNode next);
 			
 		private:
 			int counter;

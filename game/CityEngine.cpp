@@ -112,8 +112,12 @@ void CityEngine::expandRoads() {
 					topRoads.push_back(n);
 				}
 			} else {
-				auto n = roadNetwork->addRoad(road, City::RoadNetworkNode::Cross, pos);
-				topRoads.push_back(n);
+				if (eroad != nullptr)
+					roadNetwork->addNode(eroad, road);
+				else {
+					auto n = roadNetwork->addRoad(road, City::RoadNetworkNode::Cross, pos);
+					topRoads.push_back(n);
+				}
 			}
 		} else {
 			auto adj_r = dir.cross(Vec3D<int>(0, 1, 0)).normalised();

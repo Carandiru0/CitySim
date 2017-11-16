@@ -168,13 +168,13 @@ std::list<RoadNode> City::RoadNetwork::pathfind_astar(RoadNode start, RoadNode g
 	return path;
 }
 
-float City::RoadNetwork::distance(RoadNode start, RoadNode goal) {
-	float dx = goal->pos.x - start->pos.x;
-	float dy = goal->pos.y - start->pos.y;
+float City::RoadNetwork::distance(RoadNode start, RoadNode end) {
+	float dx = end->pos.x - start->pos.x;
+	float dy = end->pos.y - start->pos.y;
 
 	return sqrtf(dx * dx + dy * dy);
 }
 
-float City::RoadNetwork::heuristic(RoadNode node, RoadNode goal) {
+float City::RoadNetwork::heuristic(RoadNode node, RoadNode next) {
 	return node->road_closed ? 1000.f : 0.f;
 }
