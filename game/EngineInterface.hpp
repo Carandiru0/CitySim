@@ -40,6 +40,23 @@ namespace City {
 			std::string tile;
 	};
 
+	class IsoObject {
+		public:
+			IsoObject(Coord<float> _pos) : pos(_pos) {};
+
+			void move(Coord<float> v) { pos += v; calc_iso(); }
+
+			Coord<float> &getPosition() { return pos; }
+			Coord<float> &getIso() { return iso; }
+
+		protected:
+			Coord<float> iso, pos;
+
+			inline void calc_iso() {
+				iso = Coord<float>((pos.x - pos.y) * 32.f, (pos.x + pos.y) * 16.f);
+			}
+	};
+
 	template <class T> class CityMap {
 		public:
 			CityMap(int _w, int _h) {

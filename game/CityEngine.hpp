@@ -9,6 +9,7 @@
 #include "Net.hpp"
 #include "EngineInterface.hpp"
 #include "Tree.hpp"
+#include "CityCar.hpp"
 
 class CityEngine {
 	public:
@@ -34,29 +35,30 @@ class CityEngine {
 		std::shared_ptr<BuildingScanner> scanner;
 
 		bool stopRoads;
-		std::shared_ptr<long> pop;
 		int roadlevel, roadIterations;
 		float speed, bspeed, counter, bcounter, upgradecounter;
+		std::shared_ptr<long> pop;
+		City::Coord<int> center, dims;
 
 		enum MapLayers { Ground, Build, Zones };
 
 		std::shared_ptr<City::CityMap<City::Tile>> map_ground;
 		std::shared_ptr<City::CityMap<City::Tile>> map_build;
+		std::shared_ptr<City::RoadNetwork> roadNetwork;
 
-		City::Coord<int> center, dims;
 
 		std::map<City::Building::BuildingType, std::vector<std::string>> buildingTypes;
 		std::map<City::Coord<int>, City::Building, City::CoordComp<int>> buildings;
-		std::shared_ptr<City::RoadNetwork> roadNetwork;
+
 		std::vector<City::RoadNode> topRoads;
 		std::vector<City::RoadNode> nodesToFind;
+		std::vector<std::shared_ptr<City::Car>> car_ai;
 
 		void initBuildings();
 		void initMaps();
 		void initValues();
-		
-		City::RoadNode findClosestNode(City::Coord<int> pos, int &distance);
 
+		City::RoadNode findClosestNode(City::Coord<int> pos, int &distance);
 		City::Coord<int> findRandomWorkplace(City::Coord<int> loc, float radius);
 		std::string getBuildingStr(City::Building::BuildingType type);
 
