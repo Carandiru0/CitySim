@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SFML\Graphics.hpp>
+
 #include <vector>
 #include <memory>
 #include <string>
@@ -10,15 +12,17 @@
 #include "EngineInterface.hpp"
 #include "Tree.hpp"
 #include "CityCar.hpp"
+#include "Spritehandler.hpp"
 
 class CityEngine {
 	public:
-		CityEngine(EngineInterface *renderer);
+		CityEngine(EngineInterface *renderer, SpriteHandler &sprhandler);
 
 		void update(float dt);
-
+		
 	private:
 		EngineInterface *renderer;
+		SpriteHandler &sprHandler;
 		std::shared_ptr<Net> net;
 		std::mt19937 rand_gen;
 
@@ -28,7 +32,7 @@ class CityEngine {
 				int getAngle() { return dist_angle(rand_gen); }
 
 			private:
-				std::mt19937 rand_gen;
+				std::mt19937 &rand_gen;
 				std::uniform_int_distribution<> dist_angle;
 		};
 
@@ -45,7 +49,6 @@ class CityEngine {
 		std::shared_ptr<City::CityMap<City::Tile>> map_ground;
 		std::shared_ptr<City::CityMap<City::Tile>> map_build;
 		std::shared_ptr<City::RoadNetwork> roadNetwork;
-
 
 		std::map<City::Building::BuildingType, std::vector<std::string>> buildingTypes;
 		std::map<City::Coord<int>, City::Building, City::CoordComp<int>> buildings;
@@ -74,6 +77,7 @@ class CityEngine {
 		void updateRoadNetwork(City::RoadNode node);
 		void clickTile(int x, int y);
 
+		void render(std::shared_ptr<sf::RenderWindow> app);
 		std::map<std::string, std::shared_ptr<long>> getValues();
 
 	private:

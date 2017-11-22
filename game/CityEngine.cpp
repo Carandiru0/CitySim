@@ -7,7 +7,7 @@
 
 using namespace std;
 
-CityEngine::CityEngine(EngineInterface *_renderer) : renderer(_renderer) {
+CityEngine::CityEngine(EngineInterface *_renderer, SpriteHandler &_handler) : renderer(_renderer), sprHandler(_handler) {
 	unsigned seed = (unsigned)std::chrono::system_clock::now().time_since_epoch().count();
 	rand_gen.seed(seed);
 
@@ -51,6 +51,9 @@ void CityEngine::update(float dt) {
 			roadIterations--;
 		}
 	}
+
+	for (auto car : car_ai)
+		car->update(dt);
 }
 
 void CityEngine::initBuildings() {
@@ -219,6 +222,11 @@ void CityEngine::clickTile(int x, int y) {
 	}
 }
 
+void CityEngine::render(std::shared_ptr<sf::RenderWindow> app) {
+	for (auto car : car_ai)
+		app->draw(car->getSprite());
+}
+
 map<std::string, shared_ptr<long>> CityEngine::getValues() {
 	map<std::string, shared_ptr<long>> vals;
 
@@ -254,15 +262,22 @@ void CityEngine::newBuilding(City::Building::BuildingType type) {
 	}
 	
 	if (found && inBounds(xy.x, xy.y)) {
-		//cout << "Adding building at (" << xy.x << ", " << xy.y << ")\n";
 		setTile(xy.x, xy.y, getBuildingStr(type), 1);
 		buildings[xy] = City::Building(type);
 		*pop += 4;
 
 		City::Coord<int> place = findRandomWorkplace(xy, 50.f);
 
-		if (type == City::Building::Res && place.x >= 0 && place.y >= 0)
+		if (type == City::Building::Res && place.x >= 0 && place.y >= 0) {
 			buildings[xy].assignWorkplace(place);
+
+			int d;
+			auto car_pos = findClosestNode(xy, d);
+			auto ai = make_shared<City::Car>(car_pos, car_ai, sprHandler, renderer->getOffset());
+			
+			ai->setDest(roadNetwork, findClosestNode(place, d));
+			car_ai.push_back(ai);
+		}
 	}
 }
 
@@ -277,7 +292,7 @@ City::RoadNode CityEngine::findClosestNode(City::Coord<int> pos, int &distance) 
 			City::RoadNode n = roadNetwork->searchPosition(roadNetwork->getRoot(), p);
 
 			if (n != nullptr) {
-				float dx = n->pos.x - pos.x, dy = n->pos.y - pos.y;
+				float dx = (float)(n->pos.x - pos.x), dy = (float)(n->pos.y - pos.y);
 				float dist = sqrtf(dx * dx + dy * dy);
 
 				if (dist < ldist)

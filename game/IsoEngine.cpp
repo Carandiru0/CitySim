@@ -6,7 +6,7 @@ using namespace sf;
 using namespace std;
 using namespace City;
 
-IsoEngine::IsoEngine(const SpriteHandler &_spr, std::shared_ptr<RenderWindow> _app)
+IsoEngine::IsoEngine(SpriteHandler &_spr, std::shared_ptr<RenderWindow> _app)
 	: sprHandler(_spr), dimensions(53, 53)
 {
 	app = _app;

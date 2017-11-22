@@ -1,20 +1,29 @@
 #pragma once
 
-#include <queue>
+#include <SFML\Graphics.hpp>
+
+#include <list>
 #include <vector>
 
 #include "EngineInterface.hpp"
 #include "Tree.hpp"
+#include "SpriteHandler.hpp"
+#include "Vec3D.h"
 
 namespace City {
-	class Car : IsoObject {
+	class Car : public IsoObject {
 		public:
-			Car(Coord<float> pos, std::vector<std::shared_ptr<Car>> &_ai) : IsoObject(pos), ai(_ai) {}
+			Car(RoadNode pos, std::vector<std::shared_ptr<Car>> &_ai, SpriteHandler &sprHandler, Coord<float> offset);
 
 			void update(float dt);
+			void setDest(std::shared_ptr<RoadNetwork> net, RoadNode dest);
+			sf::Sprite &getSprite();
 
 		private:
+			sf::Sprite spr;
+			RoadNode current;
+
 			std::vector<std::shared_ptr<Car>> &ai;
-			std::queue<RoadNode> route;
+			std::list<RoadNode> route;
 	};
 }

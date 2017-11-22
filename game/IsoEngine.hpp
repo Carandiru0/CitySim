@@ -13,7 +13,7 @@
 
 class IsoEngine : public EngineInterface {
 	public:
-		IsoEngine(const SpriteHandler &sprHandler, std::shared_ptr<sf::RenderWindow> app);
+		IsoEngine(SpriteHandler &sprHandler, std::shared_ptr<sf::RenderWindow> app);
 
 		class IsoMap {
 			public:
@@ -50,7 +50,7 @@ class IsoEngine : public EngineInterface {
 
 	private:
 		std::vector<std::shared_ptr<IsoMap>> map_layers;
-		SpriteHandler sprHandler;
+		SpriteHandler &sprHandler;
 		std::shared_ptr<sf::RenderWindow> app;
 		std::map<std::string, IsoMap::TileDef> tiles;
 		
@@ -69,6 +69,7 @@ class IsoEngine : public EngineInterface {
 		inline City::Coord<float> origin(std::shared_ptr<IsoMap> map);
 
 	public:
+		City::Coord<float> getOffset() { return offset; }
 		void drawPath(std::vector<City::Coord<int>> vertices, int layer);
 		void setTile(City::Coord<int> position, std::string tile, int layer = Ground);
 };

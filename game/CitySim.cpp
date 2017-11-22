@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 
 	SpriteHandler spr;
 	IsoEngine    *iso = new IsoEngine(spr, app);
-	CityEngine    engine(iso);
+	CityEngine    engine(iso, spr);
 	Gui			  gui(spr, app, engine);
 	Net			 *net = new Net(port);
 
@@ -76,6 +76,7 @@ int main(int argc, char *argv[]) {
 		app->clear(Color(119, 181, 254));
 		
 		iso->render();
+		engine.render(app);
 		gui.render(0);
 
 		app->draw(txt_fps);

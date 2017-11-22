@@ -153,6 +153,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnimatedSprite.cpp" />
+    <ClCompile Include="CityCar.cpp" />
     <ClCompile Include="CityEngine.cpp" />
     <ClCompile Include="CitySim.cpp" />
     <ClCompile Include="GuiEnv.cpp" />
@@ -164,6 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimatedSprite.hpp" />
+    <ClInclude Include="CityCar.hpp" />
     <ClInclude Include="CityEngine.hpp" />
     <ClInclude Include="EngineInterface.hpp" />
     <ClInclude Include="GuiEnv.hpp" />

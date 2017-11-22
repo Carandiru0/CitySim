@@ -22,6 +22,11 @@ SpriteHandler::SpriteHandler()
 	sprites["road_t"]		= main_sheet.get(3, 0, 1);
 	sprites["road_b"]		= main_sheet.get(3, 1, 1);
 
+	sprites["car_e"]		= main_sheet.get(4, 0, 1);
+	sprites["car_s"]		= main_sheet.get(4, 1, 1);
+	sprites["car_n"]		= main_sheet.get(5, 0, 1);
+	sprites["car_w"]		= main_sheet.get(5, 1, 1);
+
 	sprites["btn_zone"]		= gui_sheet.get(0, 0);
 	sprites["btn_zone_hov"] = gui_sheet.get(0, 1);
 }

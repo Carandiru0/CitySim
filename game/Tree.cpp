@@ -169,8 +169,8 @@ std::list<RoadNode> City::RoadNetwork::pathfind_astar(RoadNode start, RoadNode g
 }
 
 float City::RoadNetwork::distance(RoadNode start, RoadNode end) {
-	float dx = end->pos.x - start->pos.x;
-	float dy = end->pos.y - start->pos.y;
+	float dx = (float)(end->pos.x - start->pos.x);
+	float dy = (float)(end->pos.y - start->pos.y);
 
 	return sqrtf(dx * dx + dy * dy);
 }

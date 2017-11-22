@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <memory>
 
 namespace City {
 	template <class T> struct Coord {
@@ -42,18 +43,18 @@ namespace City {
 
 	class IsoObject {
 		public:
-			IsoObject(Coord<float> _pos) : pos(_pos) {};
+			IsoObject(Coord<int> _pos, Coord<float> _off) : offset(_off) { pos = Coord<float>((float)_pos.x, (float)_pos.y); }
 
 			void move(Coord<float> v) { pos += v; calc_iso(); }
 
-			Coord<float> &getPosition() { return pos; }
-			Coord<float> &getIso() { return iso; }
+			Coord<float> getPosition() { return pos; }
+			Coord<float> getIso() { return iso; }
 
 		protected:
-			Coord<float> iso, pos;
+			Coord<float> iso, pos, offset;
 
 			inline void calc_iso() {
-				iso = Coord<float>((pos.x - pos.y) * 32.f, (pos.x + pos.y) * 16.f);
+				iso = Coord<float>((pos.x - pos.y) * 32.f, (pos.x + pos.y) * 16.f) + offset;
 			}
 	};
 
@@ -125,6 +126,7 @@ class EngineInterface {
 	public:
 		enum MapLayers { Ground, Build, Zones };
 
+		virtual City::Coord<float> getOffset() = 0;
 		virtual City::Coord<int> getDimensions() = 0;
 		virtual City::Coord<int> getIsoFromMouseXY(int x, int y) = 0;
 
