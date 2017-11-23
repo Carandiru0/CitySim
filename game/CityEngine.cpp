@@ -187,27 +187,7 @@ void CityEngine::clickTile(int x, int y) {
 		City::Coord<int> place = buildings[coord].getWorkplace();
 
 		if (place.x >= 0 && place.y >= 0) {
-			int d;
-
-			auto n0 = findClosestNode(coord, d);
-			auto n1 = findClosestNode(place, d);
-
-			auto path_a = roadNetwork->pathfind_bfs(n0, n1);
-			auto path_b = roadNetwork->pathfind_astar(n0, n1);
-
-			vector<City::Coord<int>> vert_a, vert_b;
-
-			for (auto n : path_a)
-				vert_a.push_back(n->pos);
-
-			for (auto n : path_b)
-				vert_b.push_back(n->pos);
-
-			if (!path_a.empty())
-				renderer->drawPath(vert_a, 0);
-
-			if (!path_b.empty())
-				renderer->drawPath(vert_b, 1);
+			drawRoute(coord, place);
 		}
 	}
 	else {
@@ -219,7 +199,40 @@ void CityEngine::clickTile(int x, int y) {
 			cout << "\t- Type: " << ((node->type == 0) ? "Cross" : ((node->type == 1) ? "Vertical" : "Horizontal")) << "\n";
 			cout << "\t- Level " << node->level << "\n\n";
 		}
+
+		int d;
+		auto car_pos = findClosestNode(coord, d);
+		auto ai = make_shared<City::Car>(car_pos, car_ai, sprHandler, renderer->getOffset());
+
+		ai->setDest(roadNetwork, findClosestNode(center, d));
+		car_ai.push_back(ai);
+
+		drawRoute(coord, center);
 	}
+}
+
+void CityEngine::drawRoute(City::Coord<int> start, City::Coord<int> end) {
+	int d;
+
+	auto n0 = findClosestNode(start, d);
+	auto n1 = findClosestNode(end, d);
+
+	auto path_a = roadNetwork->pathfind_bfs(n0, n1);
+	auto path_b = roadNetwork->pathfind_astar(n0, n1);
+
+	vector<City::Coord<int>> vert_a, vert_b;
+
+	for (auto n : path_a)
+		vert_a.push_back(n->pos);
+
+	for (auto n : path_b)
+		vert_b.push_back(n->pos);
+
+	if (!path_a.empty())
+		renderer->drawPath(vert_a, 0);
+
+	if (!path_b.empty())
+		renderer->drawPath(vert_b, 1);
 }
 
 void CityEngine::render(std::shared_ptr<sf::RenderWindow> app) {
@@ -271,12 +284,12 @@ void CityEngine::newBuilding(City::Building::BuildingType type) {
 		if (type == City::Building::Res && place.x >= 0 && place.y >= 0) {
 			buildings[xy].assignWorkplace(place);
 
-			int d;
-			auto car_pos = findClosestNode(xy, d);
-			auto ai = make_shared<City::Car>(car_pos, car_ai, sprHandler, renderer->getOffset());
+			//int d;
+			//auto car_pos = findClosestNode(xy, d);
+			//auto ai = make_shared<City::Car>(car_pos, car_ai, sprHandler, renderer->getOffset());
 			
-			ai->setDest(roadNetwork, findClosestNode(place, d));
-			car_ai.push_back(ai);
+			//ai->setDest(roadNetwork, findClosestNode(place, d));
+			//car_ai.push_back(ai);
 		}
 	}
 }

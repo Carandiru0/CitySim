@@ -22,8 +22,9 @@ namespace City {
 		private:
 			sf::Sprite spr;
 			RoadNode current;
+			int index;
 
 			std::vector<std::shared_ptr<Car>> &ai;
-			std::list<RoadNode> route;
+			std::vector<RoadNode> route;
 	};
 }

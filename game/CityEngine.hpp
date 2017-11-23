@@ -64,6 +64,7 @@ class CityEngine {
 		City::RoadNode findClosestNode(City::Coord<int> pos, int &distance);
 		City::Coord<int> findRandomWorkplace(City::Coord<int> loc, float radius);
 		std::string getBuildingStr(City::Building::BuildingType type);
+		void drawRoute(City::Coord<int> start, City::Coord<int> end);
 
 		void setTile(int x, int y, std::string tile, int layer = 1);
 		bool doesTileExist(int x, int y, int layer);
